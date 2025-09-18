@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+// import "./App.css";
+import logo from "@/assets/images/logo.svg";
+import { Button } from "./components/ui/button";
+import { UnitDropdown } from "./components/UnitsDropdown";
+import { Search } from "lucide-react";
+import { Input } from "./components/ui/input";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {/* Header */}
+      <header className="flex items-center justify-between mb-8">
+        <div className="flex items-center space-x-2">
+          <img src={logo} alt="App logo" />
+        </div>
+
+        <UnitDropdown />
+      </header>
+      <main className="space-y-8">
+        <h1 className="font-grotesque text-4xl">How's the sky looking today?</h1>
+
+        <form action="" className="flex flex-col items-center gap-2 w-full">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+            <Input
+              type="text"
+              placeholder="Search for a place..."
+              className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+            />
+          </div>
+          <Button type="submit" variant="default" className="w-full">
+            Submit
+          </Button>
+        </form>
+      </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
