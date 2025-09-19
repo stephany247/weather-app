@@ -9,7 +9,7 @@ export async function fetchLocation(query: string): Promise<LocationData[] | []>
   const { data } = await axios.get(GEO_URL, {
     params: {
       name: query,
-      count: 10,
+      count: 5,
     },
   });
 
