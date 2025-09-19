@@ -5,8 +5,25 @@ import { Button } from "./components/ui/button";
 import { UnitDropdown } from "./components/UnitsDropdown";
 import { Search } from "lucide-react";
 import { Input } from "./components/ui/input";
+import { fetchLocation } from "./lib/geocoding";
 
 function App() {
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState<any>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!query) return;
+
+    try {
+      const location = await fetchLocation(query);
+      setResult(location);
+      console.log("Location result:", location);
+    } catch (err) {
+      console.error("Error fetching location:", err);
+    }
+  };
 
   return (
     <>
@@ -19,14 +36,18 @@ function App() {
         <UnitDropdown />
       </header>
       <main className="space-y-8">
-        <h1 className="font-grotesque text-4xl">How's the sky looking today?</h1>
+        <h1 className="font-grotesque text-4xl">
+          How's the sky looking today?
+        </h1>
 
-        <form action="" className="flex flex-col items-center gap-2 w-full">
+        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2 w-full">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
             <Input
               type="text"
               placeholder="Search for a place..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground"
             />
           </div>
@@ -34,6 +55,12 @@ function App() {
             Submit
           </Button>
         </form>
+        {/* TEMP: Show raw result */}
+        {result && (
+          <pre className="bg-muted p-4 rounded-md text-sm w-full overflow-auto">
+            {JSON.stringify(result, null, 2)}
+          </pre>
+        )}
       </main>
     </>
   );
