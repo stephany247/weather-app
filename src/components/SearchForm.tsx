@@ -1,24 +1,25 @@
-import { useState } from "react";
+import {  type FormEvent } from "react";
 import { Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 interface SearchFormProps {
-  onSearch: (query: string) => void;
+  query: string;
+  setQuery: (val: string) => void;
+  onSearch: (val: string) => void;
+  onSubmit: (e: FormEvent) => void;
 }
 
-export default function SearchForm({ onSearch }: SearchFormProps) {
-  const [query, setQuery] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-    onSearch(query);
-  };
+export default function SearchForm({
+  query,
+  setQuery,
+  onSearch,
+  onSubmit,
+}: SearchFormProps) {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
       className="flex flex-col items-center gap-2 w-full"
     >
       <div className="relative w-full">
@@ -27,8 +28,11 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
           type="text"
           placeholder="Search for a place..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="pl-10 bg-muted border-border text-foreground placeholder:text-muted-foreground"
+          onChange={(e) => {
+            setQuery(e.target.value);
+            onSearch(e.target.value);
+          }}
+          className="pl-10 border-border text-foreground placeholder:text-muted-foreground"
         />
       </div>
       <Button type="submit" variant="default" className="w-full">
