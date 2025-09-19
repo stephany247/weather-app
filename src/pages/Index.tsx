@@ -39,16 +39,40 @@ export default function IndexPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedLocation) return;
+    // Use selectedLocation if available, otherwise fallback to the first suggestion
+    // const location = selectedLocation || suggestions[0];
+    // if (!location) return;
+
+    let location = selectedLocation;
+
+    // If no selectedLocation, try to fetch closest match
+    if (!location && query.trim()) {
+      try {
+        const locations = await fetchLocation(query);
+        if (locations.length > 0) {
+          location = locations[0];
+          console.log("Locations:", location);
+        } else {
+          console.warn("No locations found for query:", query);
+          return;
+        }
+      } catch (err) {
+        console.error("Error fetching fallback location:", err);
+        return;
+      }
+    }
+
+    if (!location) return;
 
     try {
       const weatherData = await fetchWeather(
-        selectedLocation.latitude,
-        selectedLocation.longitude
+        location.latitude,
+        location.longitude
       );
       setWeather(weatherData);
-    } catch (err) {
-      console.error("Weather fetch failed:", err);
+      setSuggestions([]);
+    } catch (error) {
+      console.error("Weather fetch failed:", error);
     }
   };
 
@@ -67,7 +91,11 @@ export default function IndexPage() {
             onSearch={handleSearch}
             onSubmit={handleSubmit}
           />
-          <SearchResults results={suggestions} onSelect={handleSelect} query={query} />
+          <SearchResults
+            results={suggestions}
+            onSelect={handleSelect}
+            query={query}
+          />
         </div>
         <h2>Hello</h2>
         {weather && (
