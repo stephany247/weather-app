@@ -1,13 +1,14 @@
-import {  type FormEvent } from "react";
-import { Search } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { Command, CommandInput, CommandItem, CommandList } from "./ui/command";
 
 interface SearchFormProps {
   query: string;
   setQuery: (val: string) => void;
   onSearch: (val: string) => void;
   onSubmit: (e: FormEvent) => void;
+  results: any[];
+  onSelect: (location: any) => void;
 }
 
 export default function SearchForm({
@@ -15,26 +16,79 @@ export default function SearchForm({
   setQuery,
   onSearch,
   onSubmit,
+  results,
+  onSelect,
 }: SearchFormProps) {
+  const commandRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        commandRef.current &&
+        !commandRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <form
-      onSubmit={onSubmit}
-      className="flex flex-col items-center gap-2 w-full"
+      onSubmit={(e) => {
+        onSubmit(e);
+        setOpen(false); // close dropdown after submit
+      }}
+      className="relative flex flex-col items-center gap-2 w-full"
     >
-      <div className="relative w-full">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-        <Input
-          type="text"
+      <Command ref={commandRef} shouldFilter={false}>
+        <CommandInput
           placeholder="Search for a place..."
           value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            onSearch(e.target.value);
+          onValueChange={(val) => {
+            setQuery(val);
+            onSearch(val);
+            setOpen(true);
           }}
-          className="pl-10 border-border text-foreground placeholder:text-muted-foreground"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              // const form = e.currentTarget.closest("form");
+              // form?.dispatchEvent(
+              //   new Event("submit", { cancelable: true, bubbles: true })
+              // );
+              (
+                e.currentTarget.closest("form") as HTMLFormElement
+              )?.requestSubmit();
+              setOpen(false);
+            }
+          }}
+          className="p-2"
         />
-      </div>
+        {open && results.length > 0 && (
+          <CommandList className="absolute top-full mt-2 p-3 left-0 w-full bg-primary-foreground shadow-lg rounded-lg z-10">
+            {results.map((location, index) => (
+              <CommandItem
+                key={index}
+                onSelect={() => {
+                  onSelect(location);
+                  setOpen(false); // close when selecting
+                }}
+                className="p-3"
+              >
+                {location.name}, {location.admin1 || location.country}
+              </CommandItem>
+            ))}
+          </CommandList>
+        )}
+      </Command>
+
       <Button type="submit" variant="default" className="w-full">
         Submit
       </Button>

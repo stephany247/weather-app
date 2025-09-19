@@ -88,13 +88,10 @@ export default function IndexPage() {
           <SearchForm
             query={query}
             setQuery={setQuery}
+            results={suggestions}
             onSearch={handleSearch}
             onSubmit={handleSubmit}
-          />
-          <SearchResults
-            results={suggestions}
             onSelect={handleSelect}
-            query={query}
           />
         </div>
         <h2>Hello</h2>
