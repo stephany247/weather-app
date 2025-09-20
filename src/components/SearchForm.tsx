@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/button";
 import { Command, CommandInput, CommandItem, CommandList } from "./ui/command";
+import { Search } from "lucide-react";
+import { Input } from "./ui/input";
 
 interface SearchFormProps {
   query: string;
@@ -20,6 +22,7 @@ export default function SearchForm({
   onSelect,
 }: SearchFormProps) {
   const commandRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
 
   // Close dropdown if clicked outside
@@ -44,57 +47,57 @@ export default function SearchForm({
       onSubmit={(e) => {
         onSubmit(e);
         setOpen(false); // close dropdown after submit
+        inputRef.current?.blur(); //remove focus from input
       }}
-      className="relative flex flex-col items-center gap-y-2 w-full"
+      className="flex flex-col items-center gap-y-4 w-full"
     >
-      <Command ref={commandRef} shouldFilter={false}>
-        <CommandInput
-          placeholder="Search for a place..."
-          value={query}
-          onValueChange={(val) => {
-            setQuery(val);
-            onSearch(val);
-            setOpen(true);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              // const form = e.currentTarget.closest("form");
-              // form?.dispatchEvent(
-              //   new Event("submit", { cancelable: true, bubbles: true })
-              // );
-              (
-                e.currentTarget.closest("form") as HTMLFormElement
-              )?.requestSubmit();
-              setOpen(false);
-            }
-          }}
-          className="p-2"
-        />
+      <div className="relative w-full" ref={commandRef}>
+        <div className="relative w-full">
+          {/* Search icon */}
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-6 w-6 text-muted-foreground" />
+          {/* Input field */}
+          <Input
+            ref={inputRef}
+            type="text"
+            placeholder="Search for a place..."
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              onSearch(e.target.value);
+              setOpen(true);
+            }}
+            className="w-full rounded-xl pl-12 pr-4 py-3 h-14 text-xl focus:outline-none focus:ring-2 focus:ring-accent-foreground"
+          />
+        </div>
         {open && results.length > 0 && (
-          <CommandList className="absolute top-full mt-2 p-3 left-0 w-full bg-primary-foreground shadow-lg rounded-lg z-10">
+          <div className="absolute top-full mt-2 p-3 left-0 w-full bg-primary-foreground shadow-lg rounded-lg z-10">
             {results.map((location, index) => (
-              <CommandItem
+              <Button
+                variant="ghost"
                 key={index}
-                onSelect={() => {
-                  onSelect(location);
-                  setOpen(false); // close when selecting
-                }}
-                className="p-3 gap-0"
+                onClick={() => onSelect(location)}
+                className="w-full justify-start p-3 text-base"
               >
-                {/* {location.name}, {location.admin1 || location.country} */}
-                {highlightMatch(
-                  `${location.name} ${location.admin1 ? `, ${location.admin1}` : ""}, ${location.country}`,
-                  query
-                )}
-              </CommandItem>
+                <p className="font-medium">
+                  {highlightMatch(
+                    `${location.name}${
+                      location.admin1 ? `, ${location.admin1}` : ""
+                    }, ${location.country}`,
+                    query
+                  )}
+                </p>
+              </Button>
             ))}
-          </CommandList>
+          </div>
         )}
-      </Command>
+      </div>
 
-      <Button type="submit" variant="default" className="w-full">
-        Submit
+      <Button
+        type="submit"
+        variant="default"
+        className="w-full h-14 text-xl bg-blue-500 text-foreground rounded-xl"
+      >
+        Search
       </Button>
     </form>
   );
