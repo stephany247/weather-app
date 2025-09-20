@@ -5,6 +5,10 @@ import type { LocationData, WeatherData } from "@/lib/types";
 import { fetchWeather } from "@/lib/weather";
 import { fetchLocation } from "@/lib/geocoding";
 import SearchResults from "@/components/SearchResults";
+import { CurrentWeather } from "@/components/CurrentWeather";
+import { WeatherDetails } from "@/components/WeatherDetails";
+import { DailyForecast } from "@/components/DailyForecast";
+import { HourlyForecast } from "@/components/HourlyForecast";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -94,12 +98,20 @@ export default function IndexPage() {
             onSelect={handleSelect}
           />
         </div>
-        <h2>Hello</h2>
-        {weather && (
+        {weather && selectedLocation && (
+          <>
+            <CurrentWeather weather={weather} location={selectedLocation} />
+            <WeatherDetails weather={weather} />
+            <DailyForecast weather={weather} />
+
+            <HourlyForecast weather={weather} />
+          </>
+        )}
+        {/* {weather && (
           <pre className="bg-muted p-4 rounded-md text-sm">
             {JSON.stringify(weather, null, 2)}
           </pre>
-        )}
+        )} */}
       </main>
     </>
   );

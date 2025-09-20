@@ -45,7 +45,7 @@ export default function SearchForm({
         onSubmit(e);
         setOpen(false); // close dropdown after submit
       }}
-      className="relative flex flex-col items-center gap-2 w-full"
+      className="relative flex flex-col items-center gap-y-2 w-full"
     >
       <Command ref={commandRef} shouldFilter={false}>
         <CommandInput
@@ -80,9 +80,13 @@ export default function SearchForm({
                   onSelect(location);
                   setOpen(false); // close when selecting
                 }}
-                className="p-3"
+                className="p-3 gap-0"
               >
-                {location.name}, {location.admin1 || location.country}
+                {/* {location.name}, {location.admin1 || location.country} */}
+                {highlightMatch(
+                  `${location.name} ${location.admin1 ? `, ${location.admin1}` : ""}, ${location.country}`,
+                  query
+                )}
               </CommandItem>
             ))}
           </CommandList>
@@ -93,5 +97,22 @@ export default function SearchForm({
         Submit
       </Button>
     </form>
+  );
+}
+
+function highlightMatch(text: string, query: string) {
+  if (!query) return text;
+
+  const regex = new RegExp(`(${query})`, "gi");
+  const parts = text.split(regex);
+
+  return parts.map((part, i) =>
+    regex.test(part) ? (
+      <mark key={i} className="font-bold bg-transparent text-accent-foreground">
+        {part}
+      </mark>
+    ) : (
+      part
+    )
   );
 }
