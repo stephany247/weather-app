@@ -4,9 +4,7 @@ import SearchForm from "@/components/SearchForm";
 import type { LocationData, WeatherData } from "@/lib/types";
 import { fetchWeather } from "@/lib/weather";
 import { fetchLocation } from "@/lib/geocoding";
-import SearchResults from "@/components/SearchResults";
 import { CurrentWeather } from "@/components/CurrentWeather";
-import { WeatherDetails } from "@/components/WeatherDetails";
 import { DailyForecast } from "@/components/DailyForecast";
 import { HourlyForecast } from "@/components/HourlyForecast";
 
@@ -83,8 +81,8 @@ export default function IndexPage() {
   return (
     <>
       <Header />
-      <main className="space-y-8 max-w-xl mx-auto">
-        <h1 className="font-grotesque text-4xl">
+      <main className="max-w-xl mx-auto space-y-12">
+        <h1 className="font-grotesque text-[3.25rem]/tight text-center font-bold px-2">
           How's the sky looking today?
         </h1>
 
@@ -101,7 +99,6 @@ export default function IndexPage() {
         {weather && selectedLocation && (
           <>
             <CurrentWeather weather={weather} location={selectedLocation} />
-            <WeatherDetails weather={weather} />
             <DailyForecast weather={weather} />
 
             <HourlyForecast weather={weather} />

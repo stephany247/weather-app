@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/button";
-import { Command, CommandInput, CommandItem, CommandList } from "./ui/command";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 

@@ -25,15 +25,15 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-4">
       {details.map((detail, index) => (
-        <div key={index} className="glass-card rounded-xl p-4 text-white">
-          <div className="text-muted-foreground mb-1">
+        <div key={index} className="glass-card rounded-xl p-4 space-y-4">
+          <p className="text-muted-foreground">
             {detail.label}
-          </div>
-          <div className="text-3xl">
+          </p>
+          <h3 className="text-3xl font-light">
             {detail.value}
-          </div>
+          </h3>
         </div>
       ))}
     </div>
