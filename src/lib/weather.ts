@@ -1,15 +1,24 @@
 import type { WeatherData } from "./types";
+import type { Units } from "./units";
 
 const BASE_URL = "https://api.open-meteo.com/v1/forecast";
 
-export async function fetchWeather(lat: number, lon: number): Promise<WeatherData> {
+export async function fetchWeather(
+  lat: number,
+  lon: number,
+  units: Units
+): Promise<WeatherData> {
   const params = new URLSearchParams({
     latitude: lat.toString(),
     longitude: lon.toString(),
-    current: "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation,weather_code",
+    current:
+      "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation,weather_code",
     hourly: "temperature_2m,weather_code",
     daily: "temperature_2m_max,temperature_2m_min,weather_code",
     timezone: "auto",
+    temperature_unit: units.temp === "c" ? "celsius" : "fahrenheit",
+    windspeed_unit: units.wind,
+    precipitation_unit: units.precip === "mm" ? "mm" : "inch",
   });
 
   const res = await fetch(`${BASE_URL}?${params}`);

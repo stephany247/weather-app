@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import SearchForm from "@/components/SearchForm";
 import type { LocationData, WeatherData } from "@/lib/types";
@@ -7,6 +7,8 @@ import { fetchLocation } from "@/lib/geocoding";
 import { CurrentWeather } from "@/components/CurrentWeather";
 import { DailyForecast } from "@/components/DailyForecast";
 import { HourlyForecast } from "@/components/HourlyForecast";
+import { metricDefaults, type Units } from "@/lib/units";
+import { useUnits } from "@/store/useUnits";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -15,6 +17,8 @@ export default function IndexPage() {
   const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
     null
   );
+  // const [units, setUnits] = useState<Units>(metricDefaults);
+const {units, setUnits} = useUnits();
 
   const handleSearch = async (query: string) => {
     if (!query || !query.trim()) {
@@ -69,7 +73,8 @@ export default function IndexPage() {
     try {
       const weatherData = await fetchWeather(
         location.latitude,
-        location.longitude
+        location.longitude,
+        units
       );
       setWeather(weatherData);
       setSuggestions([]);
@@ -77,6 +82,24 @@ export default function IndexPage() {
       console.error("Weather fetch failed:", error);
     }
   };
+
+  // ✅ Re-fetch when units change (if we already have a location)
+  useEffect(() => {
+    if (selectedLocation) {
+      (async () => {
+        try {
+          const weatherData = await fetchWeather(
+            selectedLocation.latitude,
+            selectedLocation.longitude,
+            units
+          );
+          setWeather(weatherData);
+        } catch (error) {
+          console.error("Weather fetch failed:", error);
+        }
+      })();
+    }
+  }, [units, selectedLocation]);
 
   return (
     <>

@@ -9,6 +9,7 @@ interface WeatherCardProps {
   humidity: number;
   wind: number;
   precipitation: number;
+  units: "metric" | "imperial";
 }
 
 export default function WeatherCard({
@@ -19,7 +20,11 @@ export default function WeatherCard({
   humidity,
   wind,
   precipitation,
+  units,
 }: WeatherCardProps) {
+  const tempUnit = units === "metric" ? "°C" : "°F";
+  const windUnit = units === "metric" ? "m/s" : "mph";
+  const precipUnit = units === "metric" ? "mm" : "in";
   return (
     <Card className="w-full max-w-sm mx-auto rounded-2xl shadow-md">
       <CardHeader className="text-center">
@@ -31,7 +36,10 @@ export default function WeatherCard({
         {/* Weather Icon + Temp */}
         <div className="flex flex-col items-center">
           {icon}
-          <p className="text-5xl font-bold">{temperature}°</p>
+          <p className="text-5xl font-bold">
+            {temperature}
+            {tempUnit}
+          </p>
         </div>
 
         {/* Weather Details */}
@@ -46,11 +54,15 @@ export default function WeatherCard({
           </div>
           <div className="flex items-center gap-2">
             <Wind className="w-4 h-4 text-cyan-500" />
-            <span>Wind: {wind} mph</span>
+            <span>
+              Wind: {wind} {windUnit}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <CloudRain className="w-4 h-4 text-indigo-500" />
-            <span>Precip: {precipitation} in</span>
+            <span>
+              Precip: {precipitation} {precipUnit}
+            </span>
           </div>
         </div>
       </CardContent>

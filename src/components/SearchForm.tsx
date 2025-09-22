@@ -65,7 +65,7 @@ export default function SearchForm({
               onSearch(e.target.value);
               setOpen(true);
             }}
-            className="w-full rounded-xl pl-12 pr-4 py-3 h-14 text-xl focus:outline-none focus:ring-2 focus:ring-accent-foreground"
+            className="w-full rounded-xl pl-12 pr-4 py-3 h-14 text-2xl focus:outline-none focus:ring-2 focus:ring-accent-foreground"
           />
         </div>
         {open && results.length > 0 && (
