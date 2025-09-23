@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useWeatherLoading } from "@/store/useWeatherLoading";
 
 interface HourlyForecastProps {
   weather: WeatherData;
@@ -15,6 +16,8 @@ interface HourlyForecastProps {
 
 export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
   const [selectedDay, setSelectedDay] = useState(0);
+  const { isWeatherLoading } = useWeatherLoading();
+
   const currentHour = new Date().getHours();
 
   const getHourDisplay = (timeString: string) => {
@@ -83,29 +86,43 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
           <SelectContent>
             {dayKeys.map((day, index) => (
               <SelectItem key={day} value={String(index)}>
-                {day}
+                {isWeatherLoading ? "-" : day}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      <div className="glass-card rounded-xl p-4 space-y-3">
+      <div
+        className={`glass-card rounded-xl p-4 space-y-3 ${
+          isWeatherLoading ? "animate-pulse" : ""
+        }`}
+      >
         {hoursForDay?.map((entry, index) => (
           <div
             key={index}
-            className="flex items-center justify-between text-white"
+            className="flex items-center justify-between text-white bg-card p-2 rounded-lg"
           >
             <div className="flex items-center space-x-3">
               <WeatherIcon
                 code={entry.code}
-                className="w-12 h-12 text-yellow-400"
+                className={`w-12 h-12 text-yellow-400 ${
+                  isWeatherLoading ? "invisible" : ""
+                }`}
               />
-              <span className="text-lg font-semibold">
+              <span
+                className={`text-lg font-semibold ${
+                  isWeatherLoading ? "invisible" : ""
+                }`}
+              >
                 {getHourDisplay(entry.time)}
               </span>
             </div>
-            <span className="text-sm font-medium">
+            <span
+              className={`text-sm font-medium ${
+                isWeatherLoading ? "invisible" : ""
+              }`}
+            >
               {Math.round(entry.temp)}°
             </span>
           </div>

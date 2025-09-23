@@ -1,5 +1,6 @@
 import type { WeatherData } from "@/lib/types";
 import { WeatherIcon } from "./WeatherIcon";
+import { useWeatherLoading } from "@/store/useWeatherLoading";
 
 interface DailyForecastProps {
   weather: WeatherData;
@@ -7,6 +8,7 @@ interface DailyForecastProps {
 
 export const DailyForecast = ({ weather }: DailyForecastProps) => {
   const today = new Date();
+  const { isWeatherLoading } = useWeatherLoading();
 
   const getDayName = (dateString: string, index: number) => {
     if (index === 0) return "Today";
@@ -22,18 +24,20 @@ export const DailyForecast = ({ weather }: DailyForecastProps) => {
         {weather.daily.time.slice(0, 7).map((date, index) => (
           <div
             key={index}
-            className="glass-card rounded-xl p-3 text-center text-white space-y-3"
+            className={`glass-card rounded-xl p-3 text-center text-white space-y-3 ${
+              isWeatherLoading ? "animate-pulse" : ""
+            }`}
           >
-            <div className="text-lg font-medium">
+            <div className={`text-lg font-medium ${isWeatherLoading ? "invisible" : ""}`}>
               {getDayName(date, index)}
             </div>
-            <div className="flex justify-center">
+            <div className={`flex justify-center ${isWeatherLoading ? "invisible" : ""}`}>
               <WeatherIcon
                 code={weather.daily.weather_code[index]}
                 className="w-15 h-15"
               />
             </div>
-            <div className="flex justify-between items-center font-medium">
+            <div className={`flex justify-between items-center font-medium ${isWeatherLoading ? "invisible" : ""}`}>
               <div className="">
                 {Math.round(weather.daily.temperature_2m_max[index])}°
               </div>

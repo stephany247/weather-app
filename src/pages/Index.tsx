@@ -10,6 +10,7 @@ import { HourlyForecast } from "@/components/HourlyForecast";
 import { useUnits } from "@/store/useUnits";
 import { Ban, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useWeatherLoading } from "@/store/useWeatherLoading";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -22,6 +23,7 @@ export default function IndexPage() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [noResults, setNoResults] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const { isWeatherLoading, setWeatherLoading } = useWeatherLoading();
 
   const handleSearch = async (query: string) => {
     setNoResults(false); // clear previous "no results"
@@ -36,13 +38,13 @@ export default function IndexPage() {
       const locations = await fetchLocation(query);
       if (!locations || locations.length === 0) {
         setSuggestions([]);
-        setWeather(null);
-        setSelectedLocation(null);
+        // setWeather(null);
+        // setSelectedLocation(null);
         setNoResults(true);
       } else {
         setSuggestions(locations || []);
-        setWeather(null);
-        setSelectedLocation(null);
+        // setWeather(null);
+        // setSelectedLocation(null);
         setNoResults(false);
       }
     } catch (err) {
@@ -66,6 +68,8 @@ export default function IndexPage() {
     setSuggestions([]); // hide dropdown
     setNoResults(false);
     setApiError(null);
+
+    // setTimeout(() => setQuery(""), 500);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,6 +83,7 @@ export default function IndexPage() {
         const locations = await fetchLocation(query);
         if (locations.length > 0) {
           location = locations[0];
+          // setQuery("");
           console.log("Locations:", location);
         } else {
           console.warn("No locations found for query:", query);
@@ -97,6 +102,7 @@ export default function IndexPage() {
     if (!location) return;
 
     try {
+      setWeatherLoading(true); // start loading
       const weatherData = await fetchWeather(
         location.latitude,
         location.longitude,
@@ -106,11 +112,17 @@ export default function IndexPage() {
       setSuggestions([]);
       setApiError(null);
       setNoResults(false);
+      // setQuery("");
+
+      // ✅ blur input so it visually clears
+      (document.activeElement as HTMLElement)?.blur();
     } catch (error) {
       console.error("Weather fetch failed:", error);
       setApiError(
         "We couldn’t connect to the server (API error). Please try again in a few moments."
       );
+    } finally {
+      setWeatherLoading(false); // stop loading
     }
   };
 
@@ -175,7 +187,7 @@ export default function IndexPage() {
             How's the sky looking today?
           </h1>
 
-          <div className="relative w-full space-y-6">
+          <div className="relative w-full space-y-8">
             <SearchForm
               query={query}
               setQuery={setQuery}
