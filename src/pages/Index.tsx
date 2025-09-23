@@ -7,8 +7,9 @@ import { fetchLocation } from "@/lib/geocoding";
 import { CurrentWeather } from "@/components/CurrentWeather";
 import { DailyForecast } from "@/components/DailyForecast";
 import { HourlyForecast } from "@/components/HourlyForecast";
-import { metricDefaults, type Units } from "@/lib/units";
 import { useUnits } from "@/store/useUnits";
+import { Ban, RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -17,19 +18,40 @@ export default function IndexPage() {
   const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
     null
   );
-  // const [units, setUnits] = useState<Units>(metricDefaults);
-const {units, setUnits} = useUnits();
+  const { units } = useUnits();
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [noResults, setNoResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleSearch = async (query: string) => {
-    if (!query || !query.trim()) {
+    setNoResults(false); // clear previous "no results"
+    setApiError(null); // clear any previous server error
+
+    if (!query || !query.trim() || query.trim().length < 2) {
       setSuggestions([]);
       return;
     }
+    setIsSearching(true);
     try {
       const locations = await fetchLocation(query);
-      setSuggestions(locations || []);
+      if (!locations || locations.length === 0) {
+        setSuggestions([]);
+        setWeather(null);
+        setSelectedLocation(null);
+        setNoResults(true);
+      } else {
+        setSuggestions(locations || []);
+        setWeather(null);
+        setSelectedLocation(null);
+        setNoResults(false);
+      }
     } catch (err) {
       console.error("Error:", err);
+      setApiError(
+        "We couldn’t connect to the server (API error). Please try again in a few moments."
+      );
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -37,17 +59,17 @@ const {units, setUnits} = useUnits();
     setSelectedLocation(location);
     // Autocomplete input with selected option
     setQuery(
-      `${location.name}${location.admin1 ? `, ${location.admin1}` : ""}`
+      `${location.name}${location.admin1 ? `, ${location.admin1}` : ""}, ${
+        location.country
+      }`
     );
     setSuggestions([]); // hide dropdown
+    setNoResults(false);
+    setApiError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Use selectedLocation if available, otherwise fallback to the first suggestion
-    // const location = selectedLocation || suggestions[0];
-    // if (!location) return;
 
     let location = selectedLocation;
 
@@ -60,10 +82,14 @@ const {units, setUnits} = useUnits();
           console.log("Locations:", location);
         } else {
           console.warn("No locations found for query:", query);
+          setNoResults(true);
           return;
         }
       } catch (err) {
         console.error("Error fetching fallback location:", err);
+        setApiError(
+          "We couldn’t connect to the server (API error). Please try again in a few moments."
+        );
         return;
       }
     }
@@ -78,8 +104,13 @@ const {units, setUnits} = useUnits();
       );
       setWeather(weatherData);
       setSuggestions([]);
+      setApiError(null);
+      setNoResults(false);
     } catch (error) {
       console.error("Weather fetch failed:", error);
+      setApiError(
+        "We couldn’t connect to the server (API error). Please try again in a few moments."
+      );
     }
   };
 
@@ -94,45 +125,83 @@ const {units, setUnits} = useUnits();
             units
           );
           setWeather(weatherData);
+          setApiError(null);
         } catch (error) {
           console.error("Weather fetch failed:", error);
+          setApiError(
+            "We couldn’t connect to the server (API error). Please try again in a few moments."
+          );
         }
       })();
     }
   }, [units, selectedLocation]);
 
+  // Retry handler (used by Retry button)
+  const handleRetry = async () => {
+    setApiError(null);
+    if (!selectedLocation) return;
+    try {
+      const weatherData = await fetchWeather(
+        selectedLocation.latitude,
+        selectedLocation.longitude,
+        units
+      );
+      setWeather(weatherData);
+    } catch (err) {
+      console.error(err);
+      setApiError(
+        "We couldn’t connect to the server (API error). Please try again in a few moments."
+      );
+    }
+  };
+
   return (
     <>
       <Header />
-      <main className="max-w-xl mx-auto space-y-12">
-        <h1 className="font-grotesque text-[3.25rem]/tight text-center font-bold px-2">
-          How's the sky looking today?
-        </h1>
+      {apiError ? (
+        <main className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6 rounded-lg text-center p-4">
+          <Ban />
+          <h1 className="text-5xl font-grotesque font-bold">
+            Something went wrong
+          </h1>
+          <p className="font-medium text-muted-foreground">{apiError}</p>
+          <Button variant="secondary" onClick={handleRetry}>
+            <RefreshCcw /> Retry
+          </Button>
+        </main>
+      ) : (
+        <main className="max-w-xl mx-auto space-y-12">
+          <h1 className="font-grotesque text-[3.25rem]/tight text-center font-bold px-2">
+            How's the sky looking today?
+          </h1>
 
-        <div className="relative w-full">
-          <SearchForm
-            query={query}
-            setQuery={setQuery}
-            results={suggestions}
-            onSearch={handleSearch}
-            onSubmit={handleSubmit}
-            onSelect={handleSelect}
-          />
-        </div>
-        {weather && selectedLocation && (
-          <>
-            <CurrentWeather weather={weather} location={selectedLocation} />
-            <DailyForecast weather={weather} />
+          <div className="relative w-full space-y-6">
+            <SearchForm
+              query={query}
+              setQuery={setQuery}
+              results={suggestions}
+              onSearch={handleSearch}
+              onSubmit={handleSubmit}
+              onSelect={handleSelect}
+              isSearching={isSearching}
+            />
+            {/* show inline "no results" message (not the full-page error) */}
+            {noResults && (
+              <p className="text-center font-bold text-2xl">
+                No search result found!
+              </p>
+            )}
+          </div>
 
-            <HourlyForecast weather={weather} />
-          </>
-        )}
-        {/* {weather && (
-          <pre className="bg-muted p-4 rounded-md text-sm">
-            {JSON.stringify(weather, null, 2)}
-          </pre>
-        )} */}
-      </main>
+          {weather && selectedLocation && (
+            <>
+              <CurrentWeather weather={weather} location={selectedLocation} />
+              <DailyForecast weather={weather} />
+              <HourlyForecast weather={weather} />
+            </>
+          )}
+        </main>
+      )}
     </>
   );
 }
