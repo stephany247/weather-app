@@ -32,7 +32,7 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
   return (
     <section className="space-y-5">
       {isWeatherLoading ? (
-        <div className="animate-pulse rounded-xl bg-muted p-6 h-60 flex flex-col items-center justify-center gap-2">
+        <div className="animate-pulse rounded-xl bg-muted p-10 h-60 flex flex-col items-center justify-center gap-2">
           <DotsLoader />
           <p className="text-muted-foreground text-lg font-medium">
             Loading...

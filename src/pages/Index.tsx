@@ -168,7 +168,7 @@ export default function IndexPage() {
   };
 
   return (
-    <>
+    <div className="p-4 pb-12 md:p-6 md:pb-20 ">
       <Header />
       {apiError ? (
         <main className="max-w-xl mx-auto flex flex-col items-center justify-center gap-6 rounded-lg text-center p-4">
@@ -217,6 +217,6 @@ export default function IndexPage() {
           )}
         </main>
       )}
-    </>
+    </div>
   );
 }

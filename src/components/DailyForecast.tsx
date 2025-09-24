@@ -24,7 +24,7 @@ export const DailyForecast = ({ weather }: DailyForecastProps) => {
         {weather.daily.time.slice(0, 7).map((date, index) => (
           <div
             key={index}
-            className={`glass-card rounded-xl p-3 text-center text-white space-y-3 ${
+            className={`glass-card rounded-xl px-2.5 py-4 text-center text-white space-y-3 ${
               isWeatherLoading ? "animate-pulse" : ""
             }`}
           >

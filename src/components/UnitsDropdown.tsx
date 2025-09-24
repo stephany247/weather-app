@@ -40,7 +40,7 @@ export function UnitDropdown() {
           <Settings /> Units <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 p-2">
+      <DropdownMenuContent className="w-52" align="end" sideOffset={10}>
         {/* System */}
         <Button
           variant="ghost"

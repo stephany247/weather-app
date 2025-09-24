@@ -84,7 +84,7 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
           <SelectTrigger className="w-fit bg-transparent text-sm text-white">
             <SelectValue placeholder="Select day" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="w-52" align="end">
             {dayKeys.map((day, index) => (
               <SelectItem key={day} value={String(index)}>
                 {isWeatherLoading ? "-" : day}
