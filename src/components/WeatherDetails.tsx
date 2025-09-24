@@ -33,7 +33,7 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {details.map((detail, index) => (
         <div
           key={index}

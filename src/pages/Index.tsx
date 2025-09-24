@@ -182,8 +182,8 @@ export default function IndexPage() {
           </Button>
         </main>
       ) : (
-        <main className="max-w-xl mx-auto space-y-12">
-          <h1 className="font-grotesque text-[3.25rem]/tight text-center font-bold px-2">
+        <main className="space-y-12">
+          <h1 className="font-grotesque text-[3.25rem]/tight text-center font-bold px-2 max-w-sm lg:max-w-none mx-auto">
             How's the sky looking today?
           </h1>
 
@@ -206,11 +206,14 @@ export default function IndexPage() {
           </div>
 
           {weather && selectedLocation && (
-            <>
-              <CurrentWeather weather={weather} location={selectedLocation} />
-              <DailyForecast weather={weather} />
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <CurrentWeather weather={weather} location={selectedLocation} />
+                <DailyForecast weather={weather} />
+              </div>
+
               <HourlyForecast weather={weather} />
-            </>
+            </div>
           )}
         </main>
       )}

@@ -17,10 +17,10 @@ export const DailyForecast = ({ weather }: DailyForecastProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <section className="space-y-4">
       <h3 className="text-xl font-semibold">Daily forecast</h3>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-7 gap-4">
         {weather.daily.time.slice(0, 7).map((date, index) => (
           <div
             key={index}
@@ -48,6 +48,6 @@ export const DailyForecast = ({ weather }: DailyForecastProps) => {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };

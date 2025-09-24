@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Check, Settings } from "lucide-react";
+import { Check, ChevronDown, Settings } from "lucide-react";
 import { imperialDefaults, metricDefaults, type Units } from "@/lib/units";
 import { useUnits } from "@/store/useUnits";
 
@@ -37,7 +37,7 @@ export function UnitDropdown() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
           {" "}
-          <Settings /> Units
+          <Settings /> Units <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 p-2">

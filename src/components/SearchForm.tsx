@@ -51,7 +51,7 @@ export default function SearchForm({
         setOpen(false); // close dropdown after submit
         inputRef.current?.blur(); //remove focus from input
       }}
-      className="flex flex-col md:flex-row items-center gap-4 w-full"
+      className="flex flex-col md:flex-row items-center gap-4 w-full lg:max-w-2xl mx-auto"
     >
       <div className="relative w-full" ref={commandRef}>
         <div className="relative w-full">
