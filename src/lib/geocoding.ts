@@ -27,3 +27,26 @@ export async function fetchLocation(query: string): Promise<LocationData[] | []>
 
   return locations;
 }
+
+export async function reverseGeocode(
+  latitude: number,
+  longitude: number
+): Promise<{ name: string; country: string }> {
+  try {
+    const { data } = await axios.get("https://nominatim.openstreetmap.org/reverse", {
+      params: {
+        lat: latitude,
+        lon: longitude,
+        format: "json",
+      },
+    });
+
+    return {
+      name: data.address.city || data.address.town || data.address.village || "Unknown",
+      country: data.address.country || "",
+    };
+  } catch (err) {
+    console.error("Reverse geocoding failed:", err);
+    return { name: "Current Location", country: "" };
+  }
+}

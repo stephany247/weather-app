@@ -34,13 +34,13 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
       {isWeatherLoading ? (
         <div className="animate-pulse rounded-xl bg-muted p-10 h-60 flex flex-col items-center justify-center gap-2">
           <DotsLoader />
-          <p className="text-muted-foreground text-lg font-medium">
+          <p className="text-muted-foreground text-lg font-medium text-center">
             Loading...
           </p>
         </div>
       ) : (
-        <div className="flex flex-col justify-center md:justify-between items-center gap-4 rounded-3xl px-6 py-10 text-white bg-[url(/bg-today-small.svg)] md:bg-[url(/bg-today-large.svg)] bg-cover bg-no-repeat">
-          <div className="text-center leading-[1.2] space-y-2">
+        <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 rounded-3xl px-6 py-10 h-60 md:h-72 text-white bg-[url(/bg-today-small.svg)] md:bg-[url(/bg-today-large.svg)] bg-cover bg-no-repeat">
+          <div className="text-center md:text-left leading-[1.2] space-y-2">
             <h2 className="text-3xl font-bold">
               {location.name}, {location.country}
             </h2>

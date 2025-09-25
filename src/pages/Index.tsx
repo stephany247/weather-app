@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import SearchForm from "@/components/SearchForm";
 import type { LocationData, WeatherData } from "@/lib/types";
 import { fetchWeather } from "@/lib/weather";
-import { fetchLocation } from "@/lib/geocoding";
+import { fetchLocation, reverseGeocode } from "@/lib/geocoding";
 import { CurrentWeather } from "@/components/CurrentWeather";
 import { DailyForecast } from "@/components/DailyForecast";
 import { HourlyForecast } from "@/components/HourlyForecast";
@@ -166,6 +166,48 @@ export default function IndexPage() {
       );
     }
   };
+
+  // Auto-detect location on first visit
+  useEffect(() => {
+    if (!weather && navigator.geolocation) {
+      setWeatherLoading(true); // show loading while fetching
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const { latitude, longitude } = pos.coords;
+
+          try {
+            // Reverse geocode to get a readable location
+            const location = await reverseGeocode(latitude, longitude);
+            const currentLocation = {
+              name: location.name,
+              country: location.country,
+              latitude,
+              longitude,
+            };
+
+            setSelectedLocation(currentLocation);
+
+            const weatherData = await fetchWeather(latitude, longitude, units);
+            setWeather(weatherData);
+            setApiError(null);
+            setNoResults(false);
+          } catch (err) {
+            console.error("Geolocation fetch failed:", err);
+            setApiError(
+              "We couldn’t get your current location’s weather. Please search manually."
+            );
+          } finally {
+            setWeatherLoading(false);
+          }
+        },
+        (err) => {
+          console.warn("Geolocation denied:", err);
+          // gracefully fallback to manual search
+        }
+      );
+    }
+  }, [units, weather, setWeatherLoading]);
 
   return (
     <div className="p-4 pb-12 md:p-6 md:pb-20 ">
