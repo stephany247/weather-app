@@ -11,19 +11,18 @@ import { useUnits } from "@/store/useUnits";
 import { Ban, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
+import { useSelectedLocation } from "@/store/useSelectedLocation";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<LocationData[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
-    null
-  );
   const { units } = useUnits();
   const [apiError, setApiError] = useState<string | null>(null);
   const [noResults, setNoResults] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const { isWeatherLoading, setWeatherLoading } = useWeatherLoading();
+  const { setWeatherLoading } = useWeatherLoading();
+  const { selectedLocation, setSelectedLocation } = useSelectedLocation();
 
   const handleSearch = async (query: string) => {
     setNoResults(false); // clear previous "no results"

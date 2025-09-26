@@ -28,3 +28,7 @@ export interface WeatherData {
     weather_code: number[];
   };
 }
+
+export interface FavoriteLocation extends LocationData {
+  id: string; // unique identifier
+}
