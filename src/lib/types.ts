@@ -28,6 +28,12 @@ export interface WeatherData {
     temperature_2m_min: number[];
     weather_code: number[];
   };
+  minutely_15: {
+    time: string[];
+    uv_index?: number[];
+    pressure_msl?: number[];
+    visibility?: number[];
+  };
 }
 
 export interface FavoriteLocation extends LocationData {
