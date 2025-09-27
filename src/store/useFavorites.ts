@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { LocationData, FavoriteLocation } from "@/lib/types";
+import { normalizeLocation } from "@/lib/location";
 
 interface FavoritesStore {
   favorites: FavoriteLocation[];
   addFavorite: (location: LocationData) => void;
-  removeFavorite: (lat: number, lon: number) => void;
-  isFavorite: (lat: number, lon: number) => boolean;
+  removeFavorite: (id: string) => void;
+  isFavorite: (id: string) => boolean;
 }
 
 export const useFavorites = create<FavoritesStore>()(
@@ -15,21 +16,17 @@ export const useFavorites = create<FavoritesStore>()(
       favorites: [],
       addFavorite: (location) => {
         const { favorites } = get();
-        const id = `${location.latitude},${location.longitude}`; // ✅ stable id
-
-        if (!favorites.some((fav) => fav.id === id)) {
-          const newFav: FavoriteLocation = { ...location, id };
-          set({ favorites: [...favorites, newFav] });
+        const normalizedFav: FavoriteLocation = normalizeLocation(location);
+        if (!favorites.some((fav) => fav.id === normalizedFav.id)) {
+          set({ favorites: [...get().favorites, normalizedFav] });
         }
       },
-      removeFavorite: (lat, lon) => {
-        const id = `${lat},${lon}`;
+      removeFavorite: (id) => {
         set({
           favorites: get().favorites.filter((fav) => fav.id !== id),
         });
       },
-      isFavorite: (lat, lon) => {
-        const id = `${lat},${lon}`;
+      isFavorite: (id) => {
         return get().favorites.some((fav) => fav.id === id);
       },
     }),

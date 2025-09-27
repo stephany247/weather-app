@@ -12,6 +12,7 @@ import { Ban, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
 import { useSelectedLocation } from "@/store/useSelectedLocation";
+import { normalizeLocation } from "@/lib/location";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -57,7 +58,8 @@ export default function IndexPage() {
   };
 
   const handleSelect = (location: any) => {
-    setSelectedLocation(location);
+    const normalized = normalizeLocation(location);
+    setSelectedLocation(normalized);
     // Autocomplete input with selected option
     setQuery(
       `${location.name}${location.admin1 ? `, ${location.admin1}` : ""}, ${
@@ -111,7 +113,7 @@ export default function IndexPage() {
       setSuggestions([]);
       setApiError(null);
       setNoResults(false);
-      // setQuery("");
+      setQuery("");
 
       // ✅ blur input so it visually clears
       (document.activeElement as HTMLElement)?.blur();
@@ -178,12 +180,12 @@ export default function IndexPage() {
           try {
             // Reverse geocode to get a readable location
             const location = await reverseGeocode(latitude, longitude);
-            const currentLocation = {
+            const currentLocation = normalizeLocation({
               name: location.name,
               country: location.country,
               latitude,
               longitude,
-            };
+            });
 
             setSelectedLocation(currentLocation);
 

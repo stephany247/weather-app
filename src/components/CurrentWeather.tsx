@@ -23,7 +23,7 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
   const { isWeatherLoading } = useWeatherLoading();
 
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
-  const favorite = isFavorite(location.latitude, location.longitude);
+  const favorite = isFavorite(location.id);
 
   // if (isWeatherLoading) {
   //   return (
@@ -55,7 +55,7 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
             {favorite ? (
               <button
                 onClick={() =>
-                  removeFavorite(location.latitude, location.longitude)
+                  removeFavorite(location.id)
                 }
                 className="flex items-center gap-1 text-yellow-500 cursor-pointer"
               >

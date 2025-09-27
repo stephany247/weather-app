@@ -4,6 +4,7 @@ export interface LocationData {
   name: string;
   country: string;
   admin1?: string;
+  id: string;
 }
 
 export interface WeatherData {
