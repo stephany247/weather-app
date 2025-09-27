@@ -29,7 +29,7 @@ export const WeatherIcon = ({
     if (weatherCode <= 86) return overcast; // Snow showers
     if (weatherCode <= 99) return stormy; // Thunderstorm
 
-    // return <Sun className={className} />;
+    return sunny;
   };
 
   //   return getIcon(code);

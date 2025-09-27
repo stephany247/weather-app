@@ -15,7 +15,7 @@ export async function fetchWeather(
     current:
       "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation,weather_code",
     hourly: "temperature_2m,weather_code",
-    daily: "temperature_2m_max,temperature_2m_min,weather_code",
+    daily: "temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset",
     timezone: "auto",
     temperature_unit: units.temp === "c" ? "celsius" : "fahrenheit",
     windspeed_unit: units.wind,
@@ -47,6 +47,8 @@ export async function fetchWeather(
         temperature_2m_max: data.daily.temperature_2m_max,
         temperature_2m_min: data.daily.temperature_2m_min,
         weather_code: data.daily.weather_code,
+        sunrise: data.daily.sunrise,
+        sunset: data.daily.sunset,
       },
       minutely_15: {
         time: data.minutely_15.time,

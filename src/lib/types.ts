@@ -27,6 +27,8 @@ export interface WeatherData {
     temperature_2m_max: number[];
     temperature_2m_min: number[];
     weather_code: number[];
+    sunrise: string[];
+    sunset: string[];
   };
   minutely_15: {
     time: string[];

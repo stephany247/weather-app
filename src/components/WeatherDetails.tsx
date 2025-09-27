@@ -1,6 +1,7 @@
 import type { WeatherData } from "@/lib/types";
 import { useUnits } from "@/store/useUnits";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
+import { Sunrise, Sunset } from "lucide-react";
 
 interface WeatherDetailsProps {
   weather: WeatherData;
@@ -43,6 +44,10 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
       ? weather.minutely_15.pressure_msl[currentIndex]
       : null;
 
+  const todayIndex = 0; // first day (today)
+  const sunrise = weather.daily.sunrise?.[todayIndex];
+  const sunset = weather.daily.sunset?.[todayIndex];
+
   const details = [
     {
       label: "Feels Like",
@@ -77,6 +82,26 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
             : `${(visibility / 1609).toFixed(1)} mi`
           : "–",
     },
+    {
+      label: "Sunrise",
+      value: sunrise
+        ? new Date(sunrise).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "–",
+      icon: <Sunrise className="w-5 h-5 text-yellow-500" />,
+    },
+    {
+      label: "Sunset",
+      value: sunset
+        ? new Date(sunset).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "–",
+      icon: <Sunset className="w-5 h-5 text-orange-600" />,
+    },
   ];
 
   return (
@@ -84,11 +109,12 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
       {details.map((detail, index) => (
         <div
           key={index}
-          className={`glass-card rounded-xl p-4 space-y-4 ${
+          className={`glass-card rounded-xl p-4 space-y-4 flex flex-col justify-between ${
             isWeatherLoading ? "animate-pulse" : ""
           }`}
         >
           <p className="text-muted-foreground">{detail.label}</p>
+          <p>{detail.icon}</p>
           <h3 className="text-3xl font-light">
             {isWeatherLoading ? "–" : detail.value}
           </h3>
