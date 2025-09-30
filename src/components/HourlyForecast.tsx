@@ -10,27 +10,26 @@ import {
 } from "@/components/ui/select";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { Sunrise, Sunset } from "lucide-react";
 
 interface HourlyForecastProps {
   weather: WeatherData;
+}
+
+interface HourEntry {
+  time: string;
+  temp?: number;
+  code?: number;
+  special?: "sunrise" | "sunset";
 }
 
 export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
   const [selectedDay, setSelectedDay] = useState(0);
   const { isWeatherLoading } = useWeatherLoading();
 
-  const currentHour = new Date().getHours();
-
   const getHourDisplay = (timeString: string) => {
     const date = new Date(timeString);
-    const hour = date.getHours();
-    return hour === 0
-      ? "12 AM"
-      : hour === 12
-      ? "12 PM"
-      : hour > 12
-      ? `${hour - 12} PM`
-      : `${hour} AM`;
+    return date.toLocaleTimeString([], { hour: "numeric" });
   };
 
   // Group hourly data by day
@@ -57,24 +56,42 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
     });
   });
 
-  // Show next 8 hours
-  //   const upcomingHours = weather.hourly.time.slice(currentHour, currentHour + 8);
-  //   const upcomingTemps = weather.hourly.temperature_2m.slice(
-  //     currentHour,
-  //     currentHour + 8
-  //   );
-  //   const upcomingCodes = weather.hourly.weather_code.slice(
-  //     currentHour,
-  //     currentHour + 8
-  //   );
-
   const dayKeys = Object.keys(groupedByDay); // ["Friday, Sep 19", "Saturday, Sep 20", ...]
   const currentDayKey = dayKeys[selectedDay];
   const hoursForDay = groupedByDay[currentDayKey];
 
+  const todayIndex = selectedDay; // or 0 if always using current day
+  const sunrise = weather.daily.sunrise?.[todayIndex];
+  const sunset = weather.daily.sunset?.[todayIndex];
+
+  const augmentedHours: HourEntry[] = [];
+
+  hoursForDay.forEach((entry, i) => {
+    const entryTime = new Date(entry.time).getTime();
+
+    if (sunrise) {
+      const sunriseTime = new Date(sunrise).getTime();
+      if (
+        sunriseTime >= entryTime &&
+        sunriseTime < entryTime + 60 * 60 * 1000
+      ) {
+        augmentedHours.push({ time: sunrise, special: "sunrise" });
+      }
+    }
+
+    if (sunset) {
+      const sunsetTime = new Date(sunset).getTime();
+      if (sunsetTime >= entryTime && sunsetTime < entryTime + 60 * 60 * 1000) {
+        augmentedHours.push({ time: sunset, special: "sunset" });
+      }
+    }
+
+    augmentedHours.push(entry);
+  });
+
   return (
-    <section className="glass-card rounded-xl p-4 space-y-4 h-fit">
-      <div className="flex items-center justify-between">
+    <section className="glass-card rounded-xl py-4 space-y-4 h-fit">
+      <div className="flex items-center justify-between px-4">
         <h3 className="text-xl font-semibold text-white">Hourly forecast</h3>
 
         <Select
@@ -96,8 +113,8 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
 
       {/* <div className={`glass-card rounded-xl p-4 space-y-3 h-full overflow-y-auto`}> */}
       <ScrollArea className="h-100 rounded-lg">
-        <div className="space-y-3">
-          {hoursForDay?.map((entry, index) => (
+        <div className="space-y-3 mx-4">
+          {augmentedHours?.map((entry, index) => (
             <div
               key={index}
               className={`flex items-center justify-between text-white bg-card p-2.5 pl-3 pr-4 rounded-lg ${
@@ -105,31 +122,44 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
               }`}
             >
               <div className="flex items-center space-x-3">
-                <WeatherIcon
-                  code={entry.code}
-                  className={`w-10 h-10 text-yellow-400 ${
-                    isWeatherLoading ? "invisible" : ""
-                  }`}
-                />
+                {entry.special ? (
+                  entry.special === "sunrise" ? (
+                    <Sunrise className="w-8 h-8 ml-2 p-0.5 text-yellow-400" />
+                  ) : (
+                    <Sunset className="w-8 h-8 ml-2 p-0.5 text-orange-500" />
+                  )
+                ) : (
+                  <WeatherIcon
+                    code={entry.code!}
+                    className="w-10 h-10 text-yellow-400"
+                  />
+                )}
                 <span
                   className={`text-lg font-semibold ${
                     isWeatherLoading ? "invisible" : ""
                   }`}
                 >
-                  {getHourDisplay(entry.time)}
+                  {entry.special
+                    ? new Date(entry.time).toLocaleTimeString([], {
+                        hour: "numeric",
+                        minute: "2-digit",
+                      })
+                    : getHourDisplay(entry.time)}
                 </span>
               </div>
               <span
-                className={`text-base font-medium ${
+                className={`text-base font-medium capitalize ${
                   isWeatherLoading ? "invisible" : ""
                 }`}
               >
-                {Math.round(entry.temp)}°
+                {entry.temp !== undefined
+                  ? Math.round(entry.temp) + "°"
+                  : `${entry.special}`}
               </span>
             </div>
           ))}
         </div>
-      <ScrollBar orientation="vertical" />
+        <ScrollBar orientation="vertical" />
       </ScrollArea>
     </section>
   );
