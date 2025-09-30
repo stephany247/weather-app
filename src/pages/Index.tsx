@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/button";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
 import { useSelectedLocation } from "@/store/useSelectedLocation";
 import { normalizeLocation } from "@/lib/location";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useCompareStore } from "@/store/useCompare";
+import { WeatherCompareTable } from "@/components/WeatherComparetable";
 
 export default function IndexPage() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -24,6 +27,7 @@ export default function IndexPage() {
   const [isSearching, setIsSearching] = useState(false);
   const { setWeatherLoading } = useWeatherLoading();
   const { selectedLocation, setSelectedLocation } = useSelectedLocation();
+  const { comparisons } = useCompareStore();
 
   const handleSearch = async (query: string) => {
     setNoResults(false); // clear previous "no results"
@@ -247,17 +251,32 @@ export default function IndexPage() {
               </p>
             )}
           </div>
+          <Tabs defaultValue="details" className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="details" className="cursor-pointer">Current Location</TabsTrigger>
+              <TabsTrigger value="compare" disabled={comparisons.length < 2} className="cursor-pointer">
+                Compare
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="details">
+              {weather && selectedLocation && (
+                <div className="grid lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2 space-y-6">
+                    <CurrentWeather
+                      weather={weather}
+                      location={selectedLocation}
+                    />
+                    <DailyForecast weather={weather} />
+                  </div>
 
-          {weather && selectedLocation && (
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <CurrentWeather weather={weather} location={selectedLocation} />
-                <DailyForecast weather={weather} />
-              </div>
-
-              <HourlyForecast weather={weather} />
-            </div>
-          )}
+                  <HourlyForecast weather={weather} />
+                </div>
+              )}
+            </TabsContent>
+            <TabsContent value="compare">
+              <WeatherCompareTable />
+            </TabsContent>
+          </Tabs>
         </main>
       )}
     </div>

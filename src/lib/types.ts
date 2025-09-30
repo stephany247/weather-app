@@ -41,3 +41,10 @@ export interface WeatherData {
 export interface FavoriteLocation extends LocationData {
   id: string; // unique identifier
 }
+
+export interface CompareStore {
+  comparisons: LocationData[];
+  addComparison: (location: LocationData) => void;
+  removeComparison: (lat: number, lon: number) => void;
+  clearComparisons: () => void;
+}

@@ -5,6 +5,7 @@ import { useWeatherLoading } from "@/store/useWeatherLoading";
 import DotsLoader from "./DotsLoader";
 import { useFavorites } from "@/store/useFavorites";
 import { Bookmark, BookmarkCheck } from "lucide-react";
+import { CompareButton } from "./CompareButton";
 // import { WeatherIcon } from "./WeatherIcon";
 
 interface CurrentWeatherProps {
@@ -52,23 +53,24 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
               </h2>
               <p className="text-lg">{currentDate}</p>
             </div>
-            {favorite ? (
-              <button
-                onClick={() =>
-                  removeFavorite(location.id)
-                }
-                className="flex items-center gap-1 text-yellow-500 cursor-pointer"
-              >
-                <BookmarkCheck size={20} /> Saved location
-              </button>
-            ) : (
-              <button
-                onClick={() => addFavorite(location)}
-                className="flex items-center gap-1 text-gray-300 hover:text-yellow-400 cursor-pointer"
-              >
-                <Bookmark size={20} /> Save location
-              </button>
-            )}
+            <div className="flex gap-4">
+              {favorite ? (
+                <button
+                  onClick={() => removeFavorite(location.id)}
+                  className="flex items-center gap-1 text-yellow-500 cursor-pointer"
+                >
+                  <BookmarkCheck size={20} /> Saved location
+                </button>
+              ) : (
+                <button
+                  onClick={() => addFavorite(location)}
+                  className="flex items-center gap-1 text-gray-300 hover:text-yellow-400 cursor-pointer"
+                >
+                  <Bookmark size={20} /> Save location
+                </button>
+              )}
+              <CompareButton location={location} />
+            </div>
           </div>
 
           <div className="flex items-center justify-center space-x-4">

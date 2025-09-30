@@ -1,4 +1,3 @@
-import { CloudRain, CloudSnow, Sun } from "lucide-react";
 import sunny from "@/assets/images/icon-sunny.webp";
 import stormy from "@/assets/images/icon-storm.webp";
 import snowy from "@/assets/images/icon-snow.webp";
