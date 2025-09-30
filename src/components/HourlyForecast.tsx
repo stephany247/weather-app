@@ -58,11 +58,24 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
 
   const dayKeys = Object.keys(groupedByDay); // ["Friday, Sep 19", "Saturday, Sep 20", ...]
   const currentDayKey = dayKeys[selectedDay];
-  const hoursForDay = groupedByDay[currentDayKey];
+  let hoursForDay = groupedByDay[currentDayKey];
 
-  const todayIndex = selectedDay; // or 0 if always using current day
+  const todayIndex = selectedDay;
   const sunrise = weather.daily.sunrise?.[todayIndex];
   const sunset = weather.daily.sunset?.[todayIndex];
+
+  // For today: start at current hour
+  if (selectedDay === 0) {
+    const now = new Date();
+    const currentHourIndex = hoursForDay.findIndex(
+      (h) =>
+        new Date(h.time).getHours() === now.getHours() &&
+        new Date(h.time).getDate() === now.getDate()
+    );
+    if (currentHourIndex >= 0) {
+      hoursForDay = hoursForDay.slice(currentHourIndex);
+    }
+  }
 
   const augmentedHours: HourEntry[] = [];
 
