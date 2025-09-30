@@ -35,7 +35,7 @@ export function CompareButton({ location }: CompareButtonProps) {
     // </Button>
     <Button
       onClick={handleClick}
-      variant={isCompared ? "destructive" : "outline"}
+      variant={isCompared || reachedLimit ? "destructive" : "outline"}
       disabled={reachedLimit}
     >
       {isCompared ? (

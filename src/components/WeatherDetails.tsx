@@ -17,12 +17,15 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
       {details.map((detail, index) => (
         <div
           key={index}
-          className={`glass-card rounded-xl p-4 space-y-4 flex flex-col justify-between ${
+          className={`glass-card rounded-xl p-4 space-y-4 ${
             isWeatherLoading ? "animate-pulse" : ""
           }`}
         >
-          <p className="text-muted-foreground">{detail.label}</p>
-          <p>{detail.icon}</p>
+          <div className="flex items-center justify-between">
+            <p className="text-muted-foreground">{detail.label}</p>
+            <p>{detail.icon}</p>
+          </div>
+
           <h3 className="text-3xl font-light">
             {isWeatherLoading ? "–" : detail.value}
           </h3>
