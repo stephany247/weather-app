@@ -36,8 +36,8 @@ export function UnitDropdown() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">
-          {" "}
-          <Settings /> Units <ChevronDown />
+          <Settings /> <span className="hidden md:block"> Units</span>
+          <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-52" align="end" sideOffset={10}>

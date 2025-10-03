@@ -16,9 +16,11 @@ import { normalizeLocation } from "@/lib/location";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCompareStore } from "@/store/useCompare";
 import { WeatherCompareTable } from "@/components/WeatherCompareTable";
+import { useWeatherStore } from "@/lib/useWeather";
+import { useView } from "@/store/useView";
 
 export default function IndexPage() {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const { weather, setWeather } = useWeatherStore();
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<LocationData[]>([]);
   const { units } = useUnits();
@@ -27,7 +29,7 @@ export default function IndexPage() {
   const [isSearching, setIsSearching] = useState(false);
   const { setWeatherLoading } = useWeatherLoading();
   const { selectedLocation, setSelectedLocation } = useSelectedLocation();
-  const [view, setView] = useState<"details" | "compare">("details");
+  const { view, setView, resetView } = useView();
 
   const handleSearch = async (query: string) => {
     setNoResults(false); // clear previous "no results"
@@ -71,6 +73,7 @@ export default function IndexPage() {
       }`
     );
     setSuggestions([]); // hide dropdown
+    resetView();
     setNoResults(false);
     setApiError(null);
 
@@ -114,6 +117,7 @@ export default function IndexPage() {
         units
       );
       setWeather(weatherData);
+      resetView();
       setSuggestions([]);
       setApiError(null);
       setNoResults(false);
@@ -164,6 +168,7 @@ export default function IndexPage() {
         units
       );
       setWeather(weatherData);
+      resetView();
     } catch (err) {
       console.error(err);
       setApiError(
@@ -175,6 +180,7 @@ export default function IndexPage() {
   // Auto-detect location on first visit
   useEffect(() => {
     if (!weather && navigator.geolocation) {
+      resetView();
       setWeatherLoading(true); // show loading while fetching
 
       navigator.geolocation.getCurrentPosition(

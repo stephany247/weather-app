@@ -16,6 +16,7 @@ export interface WeatherData {
     wind_speed_10m: number;
     precipitation: number;
     weather_code: number;
+    is_day: 0 | 1;
   };
   hourly: {
     time: string[];

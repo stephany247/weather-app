@@ -13,7 +13,7 @@ export async function fetchWeather(
     latitude: lat.toString(),
     longitude: lon.toString(),
     current:
-      "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation,weather_code",
+      "temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m,precipitation,weather_code,is_day",
     hourly: "temperature_2m,weather_code",
     daily: "temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset",
     timezone: "auto",
@@ -36,6 +36,7 @@ export async function fetchWeather(
         wind_speed_10m: data.current.wind_speed_10m,
         precipitation: data.current.precipitation,
         weather_code: data.current.weather_code,
+        is_day: data.current.is_day,
       },
       hourly: {
         time: data.hourly.time,

@@ -3,6 +3,7 @@ import { UnitDropdown } from "./UnitsDropdown";
 import { FavoritesComboBox } from "./Favorites";
 import { Button } from "./ui/button";
 import { ArrowRightLeft } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface HeaderProps {
   view: "details" | "compare";
@@ -15,11 +16,13 @@ export default function Header({ view, setView }: HeaderProps) {
       <img src={logo} alt="App logo" className="w-36 h-auto" />
 
       <div className="flex items-center space-x-2 md:space-x-3">
+        <ThemeToggle />
         <Button
           onClick={() => setView(view === "compare" ? "details" : "compare")}
           variant={view === "compare" ? "default" : "outline"}
         >
-          <ArrowRightLeft /> Compare
+          <ArrowRightLeft />
+          <span className="hidden md:block"> Compare</span>
         </Button>
         <FavoritesComboBox />
         <UnitDropdown />

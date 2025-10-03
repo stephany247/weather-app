@@ -19,6 +19,7 @@ import type { LocationData as FavoriteLocation } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useSelectedLocation } from "@/store/useSelectedLocation";
 import { BookmarkCheck } from "lucide-react";
+import { useView } from "@/store/useView";
 
 export function FavoritesComboBox() {
   const [open, setOpen] = useState(false);
@@ -109,6 +110,8 @@ function FavoritesList({
   setSelectedFavorite: (fav: FavoriteLocation | null) => void;
   setSelectedLocation: (fav: FavoriteLocation) => void;
 }) {
+  const { resetView } = useView();
+
   return (
     <Command>
       <CommandInput placeholder="Search favorites..." />
@@ -122,6 +125,7 @@ function FavoritesList({
               onSelect={() => {
                 setSelectedFavorite(fav);
                 setSelectedLocation(fav);
+                resetView();
                 setOpen(false);
               }}
             >
