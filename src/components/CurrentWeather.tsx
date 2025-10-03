@@ -45,7 +45,7 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 rounded-3xl px-6 py-10 md:h-72 text-white bg-[url(/bg-today-small.svg)] md:bg-[url(/bg-today-large.svg)] bg-cover bg-no-repeat">
+        <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4 rounded-3xl px-6 py-10 md:h-72 text-white bg-[url(/blue-sky-with-clouds.jpg)] dark:bg-[url(/bg-today-small.svg)] dark:md:bg-[url(/bg-today-large.svg)] bg-cover bg-no-repeat bg-top dark:bg-center">
           <div className="text-center md:text-left leading-[1.2] flex flex-col items-center md:items-start gap-y-6">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold">
