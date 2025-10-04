@@ -261,7 +261,7 @@ export default function IndexPage() {
           {view === "details" ? (
             weather &&
             selectedLocation && (
-              <div className="grid lg:grid-cols-3 gap-8">
+              <div className="grid lg:grid-cols-3 gap-8 h-fit">
                 <div className="lg:col-span-2 space-y-6">
                   <CurrentWeather
                     weather={weather}
@@ -270,7 +270,9 @@ export default function IndexPage() {
                   <DailyForecast weather={weather} />
                 </div>
 
-                <HourlyForecast weather={weather} />
+                <div className="min-h-0">
+                  <HourlyForecast weather={weather} />
+                </div>
               </div>
             )
           ) : (

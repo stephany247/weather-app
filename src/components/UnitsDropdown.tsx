@@ -35,7 +35,7 @@ export function UnitDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="focus-within:ring dark:focus-within:ring-foreground">
           <Settings /> <span className="hidden md:block"> Units</span>
           <ChevronDown />
         </Button>
@@ -45,23 +45,12 @@ export function UnitDropdown() {
         <Button
           variant="ghost"
           onClick={setSystem}
-          className="w-full justify-start px-2"
+          className="w-full px-2 md:px-2 justify-start focus-within:ring dark:focus-within:ring-foreground"
         >
           {units.system === "metric"
             ? "Switch to Imperial"
             : "Switch to Metric"}
         </Button>
-        {/* <DropdownMenuLabel>System</DropdownMenuLabel> */}
-        {/* <DropdownMenuItem onClick={() => setSystem("metric")}>
-          Metric{" "}
-          {units.system === "metric" && <Check className="ml-auto h-4 w-4" />}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setSystem("imperial")}>
-          Imperial{" "}
-          {units.system === "imperial" && <Check className="ml-auto h-4 w-4" />}
-        </DropdownMenuItem> */}
-
-        {/* <DropdownMenuSeparator /> */}
 
         {/* Temperature */}
         <DropdownMenuLabel className="text-sm text-muted-foreground">

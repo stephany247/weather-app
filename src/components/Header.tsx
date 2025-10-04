@@ -22,7 +22,7 @@ export default function Header({ view, setView }: HeaderProps) {
         className="w-36 h-auto transition-all"
       />
 
-      <div className="flex items-center space-x-2 md:space-x-3">
+      <div className="flex items-center space-x-1.5 md:space-x-3">
         <ThemeToggle />
         <Button
           onClick={() => setView(view === "compare" ? "details" : "compare")}

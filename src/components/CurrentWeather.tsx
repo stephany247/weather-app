@@ -53,7 +53,7 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
               </h2>
               <p className="text-lg">{currentDate}</p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-4">
               {favorite ? (
                 <button
                   onClick={() => removeFavorite(location.id)}

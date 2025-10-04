@@ -47,6 +47,6 @@ export async function reverseGeocode(
     };
   } catch (err) {
     console.error("Reverse geocoding failed:", err);
-    return { name: "Current Location", country: "" };
+    return { name: "My Location", country: "" };
   }
 }

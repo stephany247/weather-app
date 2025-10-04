@@ -111,7 +111,7 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
           value={String(selectedDay)}
           onValueChange={(value) => setSelectedDay(Number(value))}
         >
-          <SelectTrigger className="w-fit bg-transparent text-sm text-white">
+          <SelectTrigger className="w-fit dark:bg-border dark:hover:bg-border/80 text-sm text-white cursor-pointer">
             <SelectValue placeholder="Select day" />
           </SelectTrigger>
           <SelectContent className="w-52" align="end">
@@ -124,27 +124,36 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
         </Select>
       </div>
 
-      {/* <div className={`glass-card rounded-xl p-4 space-y-3 h-full overflow-y-auto`}> */}
-      <ScrollArea className="h-100 rounded-lg">
+      <ScrollArea className="h-100 md:h-120 lg:h-140 xl:h-150 rounded-lg">
         <div className="space-y-3 mx-4">
           {augmentedHours?.map((entry, index) => (
             <div
               key={index}
-              className={`flex items-center justify-between text-white bg-card p-2.5 pl-3 pr-4 rounded-lg ${
+              className={`flex items-center justify-between text-white bg-card p-2.5 pl-3 pr-4 rounded-lg border ${
                 isWeatherLoading ? "animate-pulse" : ""
               }`}
             >
               <div className="flex items-center space-x-3">
                 {entry.special ? (
                   entry.special === "sunrise" ? (
-                    <Sunrise className="w-8 h-8 ml-2 p-0.5 text-yellow-400" />
+                    <Sunrise
+                      className={`w-8 h-8 ml-2 p-0.5 text-yellow-400 ${
+                        isWeatherLoading ? "invisible" : ""
+                      }`}
+                    />
                   ) : (
-                    <Sunset className="w-8 h-8 ml-2 p-0.5 text-orange-500" />
+                    <Sunset
+                      className={`w-8 h-8 ml-2 p-0.5 text-orange-500 ${
+                        isWeatherLoading ? "invisible" : ""
+                      }`}
+                    />
                   )
                 ) : (
                   <WeatherIcon
                     code={entry.code!}
-                    className="w-10 h-10 text-yellow-400"
+                    className={`w-10 h-10 text-yellow-400 ${
+                      isWeatherLoading ? "invisible" : ""
+                    }`}
                   />
                 )}
                 <span

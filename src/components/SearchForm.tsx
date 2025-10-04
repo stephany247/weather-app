@@ -110,7 +110,7 @@ export default function SearchForm({
       <Button
         type="submit"
         variant="default"
-        className="w-full md:w-2/10 h-14 text-xl bg-blue-500 text-foreground rounded-xl"
+        className="w-full md:w-2/10 h-14 text-xl text-foreground rounded-xl cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:bg-primary"
       >
         Search
       </Button>

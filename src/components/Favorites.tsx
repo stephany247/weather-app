@@ -18,7 +18,7 @@ import { useFavorites } from "@/store/useFavorites";
 import type { LocationData as FavoriteLocation } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useSelectedLocation } from "@/store/useSelectedLocation";
-import { BookmarkCheck } from "lucide-react";
+import { BookmarkCheck, MapPinCheckInside } from "lucide-react";
 import { useView } from "@/store/useView";
 
 export function FavoritesComboBox() {
@@ -45,7 +45,8 @@ export function FavoritesComboBox() {
           <Button variant="outline" className="w-fit justify-start">
             {selectedFavorite ? (
               <>
-                {selectedFavorite.name}, {selectedFavorite.country}
+                <MapPinCheckInside /> {selectedFavorite.name},{" "}
+                {selectedFavorite.country}
               </>
             ) : (
               <>
@@ -74,15 +75,7 @@ export function FavoritesComboBox() {
           className="w-fit justify-start"
           title="Favorite Locations"
         >
-          {selectedFavorite ? (
-            <>
-              {selectedFavorite.name}, {selectedFavorite.country}
-            </>
-          ) : (
-            <>
-              <BookmarkCheck />
-            </>
-          )}
+          {selectedFavorite ? <MapPinCheckInside /> : <BookmarkCheck />}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
