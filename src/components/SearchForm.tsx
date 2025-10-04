@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/button";
-import { Search } from "lucide-react";
+import { MapPin, Search } from "lucide-react";
 import { Input } from "./ui/input";
 import loadingIcon from "@/assets/images/icon-loading.svg";
 
@@ -12,6 +12,8 @@ interface SearchFormProps {
   results: any[];
   onSelect: (location: any) => void;
   isSearching: boolean;
+  onDetectLocation: () => void;
+  weather: any;
 }
 
 export default function SearchForm({
@@ -22,6 +24,8 @@ export default function SearchForm({
   results,
   onSelect,
   isSearching,
+  onDetectLocation,
+  weather,
 }: SearchFormProps) {
   const commandRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +57,20 @@ export default function SearchForm({
       }}
       className="flex flex-col md:flex-row items-center gap-4 w-full lg:max-w-2xl mx-auto"
     >
+      {/* Use My Location button */}
+      <button
+        type="button"
+        // variant="secondary"
+        onClick={onDetectLocation}
+        title="Get current location"
+        // className="w-full md:w-auto h-14 text-lg rounded-xl flex items-center justify-center gap-2"
+        className="cursor-pointer text-primary-foreground dark:text-primary"
+      >
+        <MapPin
+          size={40}
+          className={` shadow-2xl ${!weather ? "animate-bounce-slow" : ""}`}
+        />
+      </button>
       <div className="relative w-full" ref={commandRef}>
         <div className="relative w-full">
           {/* Search icon */}
@@ -75,7 +93,11 @@ export default function SearchForm({
           <>
             {isSearching ? (
               <div className="absolute top-full mt-2 p-3 left-0 flex gap-x-2 w-full bg-primary-foreground shadow-lg rounded-lg z-10">
-                <img src={loadingIcon} alt="Loading icon" className="animate-spin" />
+                <img
+                  src={loadingIcon}
+                  alt="Loading icon"
+                  className="animate-spin"
+                />
                 <p className="text-base text-muted-foreground">
                   Search in progress...
                 </p>

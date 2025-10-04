@@ -51,7 +51,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: rgb(255, 255, 255);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
@@ -148,4 +148,17 @@ html,body,:root {
   .container {
     @apply mx-auto max-w-6xl xl:max-w-7xl px-8;
   }
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 0.8s ease-in-out infinite;
 }

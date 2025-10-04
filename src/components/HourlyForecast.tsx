@@ -79,7 +79,7 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
 
   const augmentedHours: HourEntry[] = [];
 
-  hoursForDay.forEach((entry, i) => {
+  hoursForDay.forEach((entry) => {
     const entryTime = new Date(entry.time).getTime();
 
     if (sunrise) {

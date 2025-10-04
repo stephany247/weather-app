@@ -7,7 +7,6 @@ interface DailyForecastProps {
 }
 
 export const DailyForecast = ({ weather }: DailyForecastProps) => {
-  const today = new Date();
   const { isWeatherLoading } = useWeatherLoading();
 
   const getDayName = (dateString: string, index: number) => {

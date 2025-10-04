@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import SearchForm from "@/components/SearchForm";
-import type { LocationData, WeatherData } from "@/lib/types";
+import type { LocationData } from "@/lib/types";
 import { fetchWeather } from "@/lib/weather";
 import { fetchLocation, reverseGeocode } from "@/lib/geocoding";
 import { CurrentWeather } from "@/components/CurrentWeather";
@@ -13,8 +13,6 @@ import { Button } from "@/components/ui/button";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
 import { useSelectedLocation } from "@/store/useSelectedLocation";
 import { normalizeLocation } from "@/lib/location";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCompareStore } from "@/store/useCompare";
 import { WeatherCompareTable } from "@/components/WeatherCompareTable";
 import { useWeatherStore } from "@/lib/useWeather";
 import { useView } from "@/store/useView";
@@ -179,47 +177,92 @@ export default function IndexPage() {
   };
 
   // Auto-detect location on first visit
-  useEffect(() => {
-    if (!weather && navigator.geolocation) {
-      resetView();
-      setWeatherLoading(true); // show loading while fetching
-
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const { latitude, longitude } = pos.coords;
-
-          try {
-            // Reverse geocode to get a readable location
-            const location = await reverseGeocode(latitude, longitude);
-            const currentLocation = normalizeLocation({
-              name: location.name,
-              country: location.country,
-              latitude,
-              longitude,
-            });
-
-            setSelectedLocation(currentLocation);
-
-            const weatherData = await fetchWeather(latitude, longitude, units);
-            setWeather(weatherData);
-            setApiError(null);
-            setNoResults(false);
-          } catch (err) {
-            console.error("Geolocation fetch failed:", err);
-            setApiError(
-              "We couldn’t get your current location’s weather. Please search manually."
-            );
-          } finally {
-            setWeatherLoading(false);
-          }
-        },
-        (err) => {
-          console.warn("Geolocation denied:", err);
-          // gracefully fallback to manual search
-        }
-      );
+  const handleDetectLocation = async () => {
+    if (!navigator.geolocation) {
+      setApiError("Geolocation is not supported by your browser.");
+      return;
     }
-  }, [units, weather, setWeatherLoading]);
+
+    setWeatherLoading(true);
+    resetView();
+
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+
+        try {
+          const location = await reverseGeocode(latitude, longitude);
+          const currentLocation = normalizeLocation({
+            name: location.name,
+            country: location.country,
+            latitude,
+            longitude,
+          });
+
+          setSelectedLocation(currentLocation);
+
+          const weatherData = await fetchWeather(latitude, longitude, units);
+          setWeather(weatherData);
+          setApiError(null);
+          setNoResults(false);
+        } catch (err) {
+          console.error("Geolocation fetch failed:", err);
+          setApiError(
+            "We couldn’t get your current location’s weather. Please search manually."
+          );
+        } finally {
+          setWeatherLoading(false);
+        }
+      },
+      (err) => {
+        console.warn("Geolocation denied:", err);
+        setApiError("Permission denied. Please allow location access.");
+        setWeatherLoading(false);
+      }
+    );
+  };
+
+  // useEffect(() => {
+  //   if (!weather && navigator.geolocation) {
+  //     resetView();
+  //     setWeatherLoading(true); // show loading while fetching
+
+  //     navigator.geolocation.getCurrentPosition(
+  //       async (pos) => {
+  //         const { latitude, longitude } = pos.coords;
+
+  //         try {
+  //           // Reverse geocode to get a readable location
+  //           const location = await reverseGeocode(latitude, longitude);
+  //           const currentLocation = normalizeLocation({
+  //             name: location.name,
+  //             country: location.country,
+  //             latitude,
+  //             longitude,
+  //           });
+
+  //           setSelectedLocation(currentLocation);
+
+  //           const weatherData = await fetchWeather(latitude, longitude, units);
+  //           setWeather(weatherData);
+  //           setApiError(null);
+  //           setNoResults(false);
+  //         } catch (err) {
+  //           console.error("Geolocation fetch failed:", err);
+  //           setApiError(
+  //             "We couldn’t get your current location’s weather. Please search manually."
+  //           );
+  //         } finally {
+  //           setWeatherLoading(false);
+  //         }
+  //       },
+  //       (err) => {
+  //         console.warn("Geolocation denied:", err);
+  //         // gracefully fallback to manual search
+  //       }
+  //     );
+  //   }
+  // }, [units, weather, setWeatherLoading]);
 
   return (
     <div className="p-4 pb-12 md:p-6 md:pb-20 ">
@@ -251,6 +294,8 @@ export default function IndexPage() {
               onSubmit={handleSubmit}
               onSelect={handleSelect}
               isSearching={isSearching}
+              onDetectLocation={handleDetectLocation}
+              weather={weather}
             />
             {/* show inline "no results" message (not the full-page error) */}
             {noResults && (
