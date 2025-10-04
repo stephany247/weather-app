@@ -66,7 +66,7 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
                   onClick={() => addFavorite(location)}
                   className="flex items-center gap-1 text-gray-300 hover:text-yellow-400 cursor-pointer"
                 >
-                  <Bookmark size={20} /> Save location
+                  <Bookmark size={20} /> Save&nbsp;location
                 </button>
               )}
               <CompareButton location={location} />

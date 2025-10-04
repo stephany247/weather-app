@@ -58,16 +58,16 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
   --primary: oklch(0.623 0.214 259.815);
-  --primary-foreground: oklch(0.97 0.014 254.604);
+  --primary-foreground: hsl(233, 67%, 56%);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
+  --muted: oklch(0.97 0.014 254.604);
   --muted-foreground: oklch(0.554 0.046 257.417);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
+  --input: oklch(0.97 0.014 254.604);
   --ring: oklch(0.704 0.04 256.788);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -100,7 +100,7 @@
   --accent: hsl(243, 23%, 24%);
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(0.704 0.191 22.216);
-  --border:  hsl(243, 23%, 30%);
+  --border: hsl(243, 23%, 30%);
   --input: hsl(243, 27%, 20%);
   --ring: hsl(250, 6%, 84%);
   --chart-1: oklch(0.488 0.243 264.376);
@@ -140,6 +140,12 @@ html,body,:root {
   }
 
   .glass-card {
-    @apply bg-popover border border;
+    @apply bg-muted border border-border;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto max-w-6xl xl:max-w-7xl px-8;
   }
 }

@@ -60,7 +60,7 @@ export const WeatherCompareTable = () => {
                     onClick={() =>
                       removeComparison(loc.latitude, loc.longitude)
                     }
-                    className="ml-1 text-red-500 p-0 size-6 cursor-pointer"
+                    className="ml-1 text-red-500 hover:text-red-500/80 p-0 size-6 cursor-pointer"
                   >
                     <Trash2 className="h-1 w-1" />
                   </Button>

@@ -105,13 +105,13 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
   return (
     <section className="glass-card rounded-xl py-4 space-y-4 h-fit">
       <div className="flex items-center justify-between px-4">
-        <h3 className="text-xl font-semibold text-white">Hourly forecast</h3>
+        <h3 className="text-xl font-semibold text-foreground">Hourly forecast</h3>
 
         <Select
           value={String(selectedDay)}
           onValueChange={(value) => setSelectedDay(Number(value))}
         >
-          <SelectTrigger className="w-fit dark:bg-border dark:hover:bg-border/80 text-sm text-white cursor-pointer">
+          <SelectTrigger className="w-fit dark:bg-border dark:hover:bg-border/80 text-sm text-foregroundcursor-pointer">
             <SelectValue placeholder="Select day" />
           </SelectTrigger>
           <SelectContent className="w-52" align="end">
@@ -129,7 +129,7 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
           {augmentedHours?.map((entry, index) => (
             <div
               key={index}
-              className={`flex items-center justify-between text-white bg-card p-2.5 pl-3 pr-4 rounded-lg border ${
+              className={`flex items-center justify-between text-foreground bg-card p-2.5 pl-3 pr-4 rounded-lg border ${
                 isWeatherLoading ? "animate-pulse" : ""
               }`}
             >

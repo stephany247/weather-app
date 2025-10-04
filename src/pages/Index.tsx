@@ -34,6 +34,7 @@ export default function IndexPage() {
   const handleSearch = async (query: string) => {
     setNoResults(false); // clear previous "no results"
     setApiError(null); // clear any previous server error
+    setSelectedLocation(null);
 
     if (!query || !query.trim() || query.trim().length < 2) {
       setSuggestions([]);
@@ -46,12 +47,12 @@ export default function IndexPage() {
         setSuggestions([]);
         // setWeather(null);
         // setSelectedLocation(null);
-        setNoResults(true);
+        // setNoResults(true);
       } else {
         setSuggestions(locations || []);
         // setWeather(null);
         // setSelectedLocation(null);
-        setNoResults(false);
+        // setNoResults(false);
       }
     } catch (err) {
       console.error("Error:", err);
@@ -253,7 +254,7 @@ export default function IndexPage() {
             />
             {/* show inline "no results" message (not the full-page error) */}
             {noResults && (
-              <p className="text-center font-bold text-2xl">
+              <p className="text-center font-bold text-2xl mt-6">
                 No search result found!
               </p>
             )}
