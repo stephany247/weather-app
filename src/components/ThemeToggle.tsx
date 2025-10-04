@@ -5,7 +5,7 @@ import { Moon, Sun } from "lucide-react";
 import { useWeatherStore } from "@/lib/useWeather";
 
 export function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const { weather } = useWeatherStore();
   const [manualOverride, setManualOverride] = useState(false);
 
