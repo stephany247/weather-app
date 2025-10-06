@@ -19,8 +19,8 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem={false} // control default manually
+      defaultTheme="dark"
+      enableSystem={true} // control default manually
     >
       <App />
     </ThemeProvider>

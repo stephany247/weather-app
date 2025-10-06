@@ -64,12 +64,13 @@ export default function SearchForm({
         onClick={onDetectLocation}
         title="Get current location"
         // className="w-full md:w-auto h-14 text-lg rounded-xl flex items-center justify-center gap-2"
-        className="cursor-pointer text-primary-foreground dark:text-primary"
+        className="cursor-pointer inline-flex items-center gap-3 bg-accent/80 p-2 h-14 rounded-lg"
       >
         <MapPin
-          size={40}
-          className={` shadow-2xl ${!weather ? "animate-bounce-slow" : ""}`}
-        />
+          size={30}
+          className={`text-primary-foreground dark:text-primary shadow-2xl ${!weather ? "md:animate-bounce-slow" : ""}`}
+        />{" "}
+        <span className="md:hidden capitalize">Use my location</span>
       </button>
       <div className="relative w-full" ref={commandRef}>
         <div className="relative w-full">

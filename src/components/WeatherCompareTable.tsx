@@ -35,7 +35,12 @@ export const WeatherCompareTable = () => {
 
   if (comparisons.length < 2) {
     return (
-      <p className="text-muted-foreground">Add 2–5 locations to compare.</p>
+      <p
+        className="text-muted-foreground text-2xl
+      "
+      >
+        Add 2–5 locations to compare.
+      </p>
     );
   }
 

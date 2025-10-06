@@ -150,15 +150,17 @@ html,body,:root {
   }
 }
 
-@keyframes bounce-slow {
-  0%, 100% {
-    transform: translateY(0);
+@layer utilities {
+  @keyframes bounce-slow {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
   }
-  50% {
-    transform: translateY(-8px);
-  }
-}
 
-.animate-bounce-slow {
-  animation: bounce-slow 0.8s ease-in-out infinite;
+  .animate-bounce-slow {
+    animation: bounce-slow 0.8s ease-in-out infinite;
+  }
 }
