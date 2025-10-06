@@ -66,7 +66,7 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
 
   // For today: start at current hour
   if (selectedDay === 0) {
-    const now = new Date();
+    const now = new Date(weather.current.time);
     const currentHourIndex = hoursForDay.findIndex(
       (h) =>
         new Date(h.time).getHours() === now.getHours() &&
@@ -105,7 +105,9 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
   return (
     <section className="glass-card rounded-xl py-4 space-y-4 h-fit">
       <div className="flex items-center justify-between px-4">
-        <h3 className="text-xl font-semibold text-foreground">Hourly forecast</h3>
+        <h3 className="text-xl font-semibold text-foreground">
+          Hourly forecast
+        </h3>
 
         <Select
           value={String(selectedDay)}
