@@ -82,6 +82,8 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
   hoursForDay.forEach((entry) => {
     const entryTime = new Date(entry.time).getTime();
 
+    augmentedHours.push(entry);
+
     if (sunrise) {
       const sunriseTime = new Date(sunrise).getTime();
       if (
@@ -98,8 +100,6 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
         augmentedHours.push({ time: sunset, special: "sunset" });
       }
     }
-
-    augmentedHours.push(entry);
   });
 
   return (
