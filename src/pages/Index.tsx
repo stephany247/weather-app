@@ -67,7 +67,7 @@ export default function IndexPage() {
     setSelectedLocation(normalized);
     // Autocomplete input with selected option
     setQuery(
-      `${location.name}${location.admin1 ? `, ${location.admin1}` : ""}, ${
+      `${location.name}, ${
         location.country
       }`
     );
