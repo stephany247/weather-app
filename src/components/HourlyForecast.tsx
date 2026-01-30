@@ -13,7 +13,7 @@ import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Sunrise, Sunset } from "lucide-react";
 
 interface HourlyForecastProps {
-  weather: WeatherData;
+  weather: WeatherData | null;
 }
 
 interface HourEntry {
@@ -37,12 +37,29 @@ export const HourlyForecast = ({ weather }: HourlyForecastProps) => {
     [key: string]: { time: string; temp: number; code: number }[];
   } = {};
 
+   if (!weather) {
+    return (
+      <section className="glass-card rounded-xl py-4 space-y-4 h-fit">
+        <div className="px-4">
+          <h3 className="text-xl font-semibold">Hourly forecast</h3>
+        </div>
+
+        <div className="space-y-3 mx-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-14 rounded-lg bg-card/80 animate-pulse"
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
   weather.hourly.time.forEach((time, i) => {
     const date = new Date(time);
     const dayKey = date.toLocaleDateString("en-US", {
       weekday: "long",
-      // month: "short",
-      // day: "numeric",
     });
 
     if (!groupedByDay[dayKey]) {

@@ -9,8 +9,8 @@ import { CompareButton } from "./CompareButton";
 // import { WeatherIcon } from "./WeatherIcon";
 
 interface CurrentWeatherProps {
-  weather: WeatherData;
-  location: LocationData;
+  weather: WeatherData | null;
+  location: LocationData | null;
 }
 
 export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
@@ -24,16 +24,20 @@ export const CurrentWeather = ({ weather, location }: CurrentWeatherProps) => {
   const { isWeatherLoading } = useWeatherLoading();
 
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
-  const favorite = isFavorite(location.id);
 
-  // if (isWeatherLoading) {
-  //   return (
-  //     <div className="animate-pulse rounded-xl bg-muted p-6 h-60 flex flex-col items-center justify-center gap-2">
-  //       <DotsLoader />
-  //       <p className="text-muted-foreground text-lg font-medium">Loading...</p>
-  //     </div>
-  //   );
-  // }
+  if (!weather || isWeatherLoading || !location) {
+    return (
+      <section className="space-y-5">
+        <div className="animate-pulse rounded-xl bg-muted p-10 h-60 flex flex-col items-center justify-center gap-2">
+          <DotsLoader />
+          <p className="text-muted-foreground text-lg font-medium text-center">
+            Loading...
+          </p>
+        </div>
+      </section>
+    );
+  }
+  const favorite = isFavorite(location.id);
 
   return (
     <section className="space-y-5">

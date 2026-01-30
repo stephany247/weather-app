@@ -3,7 +3,7 @@ import { WeatherIcon } from "./WeatherIcon";
 import { useWeatherLoading } from "@/store/useWeatherLoading";
 
 interface DailyForecastProps {
-  weather: WeatherData;
+  weather: WeatherData | null;
 }
 
 export const DailyForecast = ({ weather }: DailyForecastProps) => {
@@ -14,6 +14,23 @@ export const DailyForecast = ({ weather }: DailyForecastProps) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", { weekday: "short" });
   };
+
+  if (!weather) {
+    return (
+      <section className="space-y-4">
+        <h3 className="text-xl font-semibold">Daily forecast</h3>
+
+        <div className="grid grid-cols-3 md:grid-cols-7 gap-4">
+          {Array.from({ length: 7 }).map((_, index) => (
+            <div
+              key={index}
+              className="glass-card rounded-xl px-2.5 py-4 h-40 animate-pulse"
+            />
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="space-y-4">
@@ -27,16 +44,22 @@ export const DailyForecast = ({ weather }: DailyForecastProps) => {
               isWeatherLoading ? "animate-pulse" : ""
             }`}
           >
-            <div className={`text-lg font-medium ${isWeatherLoading ? "invisible" : ""}`}>
+            <div
+              className={`text-lg font-medium ${isWeatherLoading ? "invisible" : ""}`}
+            >
               {getDayName(date, index)}
             </div>
-            <div className={`flex justify-center ${isWeatherLoading ? "invisible" : ""}`}>
+            <div
+              className={`flex justify-center ${isWeatherLoading ? "invisible" : ""}`}
+            >
               <WeatherIcon
                 code={weather.daily.weather_code[index]}
                 className="w-15 h-15"
               />
             </div>
-            <div className={`flex justify-between items-center font-medium ${isWeatherLoading ? "invisible" : ""}`}>
+            <div
+              className={`flex justify-between items-center font-medium ${isWeatherLoading ? "invisible" : ""}`}
+            >
               <div className="">
                 {Math.round(weather.daily.temperature_2m_max[index])}°
               </div>

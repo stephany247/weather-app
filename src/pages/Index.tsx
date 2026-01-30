@@ -43,19 +43,13 @@ export default function IndexPage() {
       const locations = await fetchLocation(query);
       if (!locations || locations.length === 0) {
         setSuggestions([]);
-        // setWeather(null);
-        // setSelectedLocation(null);
-        // setNoResults(true);
       } else {
         setSuggestions(locations || []);
-        // setWeather(null);
-        // setSelectedLocation(null);
-        // setNoResults(false);
       }
     } catch (err) {
       console.error("Error:", err);
       setApiError(
-        "We couldn’t connect to the server (API error). Please try again in a few moments."
+        "We couldn’t connect to the server (API error). Please try again in a few moments.",
       );
     } finally {
       setIsSearching(false);
@@ -66,11 +60,7 @@ export default function IndexPage() {
     const normalized = normalizeLocation(location);
     setSelectedLocation(normalized);
     // Autocomplete input with selected option
-    setQuery(
-      `${location.name}, ${
-        location.country
-      }`
-    );
+    setQuery(`${location.name}, ${location.country}`);
     setSuggestions([]); // hide dropdown
     resetView();
     setNoResults(false);
@@ -100,7 +90,7 @@ export default function IndexPage() {
       } catch (err) {
         console.error("Error fetching fallback location:", err);
         setApiError(
-          "We couldn’t connect to the server (API error). Please try again in a few moments."
+          "We couldn’t connect to the server (API error). Please try again in a few moments.",
         );
         return;
       }
@@ -113,7 +103,7 @@ export default function IndexPage() {
       const weatherData = await fetchWeather(
         location.latitude,
         location.longitude,
-        units
+        units,
       );
       setWeather(weatherData);
       resetView();
@@ -122,19 +112,19 @@ export default function IndexPage() {
       setNoResults(false);
       setQuery("");
 
-      // ✅ blur input so it visually clears
+      // blur input so it visually clears
       (document.activeElement as HTMLElement)?.blur();
     } catch (error) {
       console.error("Weather fetch failed:", error);
       setApiError(
-        "We couldn’t connect to the server (API error). Please try again in a few moments."
+        "We couldn’t connect to the server (API error). Please try again in a few moments.",
       );
     } finally {
       setWeatherLoading(false); // stop loading
     }
   };
 
-  // ✅ Re-fetch when units change (if we already have a location)
+  // Re-fetch when units change (if we already have a location)
   useEffect(() => {
     if (selectedLocation) {
       (async () => {
@@ -142,14 +132,14 @@ export default function IndexPage() {
           const weatherData = await fetchWeather(
             selectedLocation.latitude,
             selectedLocation.longitude,
-            units
+            units,
           );
           setWeather(weatherData);
           setApiError(null);
         } catch (error) {
           console.error("Weather fetch failed:", error);
           setApiError(
-            "We couldn’t connect to the server (API error). Please try again in a few moments."
+            "We couldn’t connect to the server (API error). Please try again in a few moments.",
           );
         }
       })();
@@ -164,14 +154,14 @@ export default function IndexPage() {
       const weatherData = await fetchWeather(
         selectedLocation.latitude,
         selectedLocation.longitude,
-        units
+        units,
       );
       setWeather(weatherData);
       resetView();
     } catch (err) {
       console.error(err);
       setApiError(
-        "We couldn’t connect to the server (API error). Please try again in a few moments."
+        "We couldn’t connect to the server (API error). Please try again in a few moments.",
       );
     }
   };
@@ -208,7 +198,7 @@ export default function IndexPage() {
         } catch (err) {
           console.error("Geolocation fetch failed:", err);
           setApiError(
-            "We couldn’t get your current location’s weather. Please search manually."
+            "We couldn’t get your current location’s weather. Please search manually.",
           );
         } finally {
           setWeatherLoading(false);
@@ -218,51 +208,17 @@ export default function IndexPage() {
         console.warn("Geolocation denied:", err);
         setApiError("Permission denied. Please allow location access.");
         setWeatherLoading(false);
-      }
+      },
     );
   };
 
-  // useEffect(() => {
-  //   if (!weather && navigator.geolocation) {
-  //     resetView();
-  //     setWeatherLoading(true); // show loading while fetching
+  useEffect(() => {
+    if (!navigator.geolocation) return;
 
-  //     navigator.geolocation.getCurrentPosition(
-  //       async (pos) => {
-  //         const { latitude, longitude } = pos.coords;
-
-  //         try {
-  //           // Reverse geocode to get a readable location
-  //           const location = await reverseGeocode(latitude, longitude);
-  //           const currentLocation = normalizeLocation({
-  //             name: location.name,
-  //             country: location.country,
-  //             latitude,
-  //             longitude,
-  //           });
-
-  //           setSelectedLocation(currentLocation);
-
-  //           const weatherData = await fetchWeather(latitude, longitude, units);
-  //           setWeather(weatherData);
-  //           setApiError(null);
-  //           setNoResults(false);
-  //         } catch (err) {
-  //           console.error("Geolocation fetch failed:", err);
-  //           setApiError(
-  //             "We couldn’t get your current location’s weather. Please search manually."
-  //           );
-  //         } finally {
-  //           setWeatherLoading(false);
-  //         }
-  //       },
-  //       (err) => {
-  //         console.warn("Geolocation denied:", err);
-  //         // gracefully fallback to manual search
-  //       }
-  //     );
-  //   }
-  // }, [units, weather, setWeatherLoading]);
+    if (!weather && !selectedLocation) {
+      handleDetectLocation();
+    }
+  }, []);
 
   return (
     <div className="p-4 pb-12 md:p-6 md:pb-20 ">
@@ -305,22 +261,16 @@ export default function IndexPage() {
             )}
           </div>
           {view === "details" ? (
-            weather &&
-            selectedLocation && (
-              <div className="grid lg:grid-cols-3 gap-8 h-fit">
-                <div className="lg:col-span-2 space-y-6">
-                  <CurrentWeather
-                    weather={weather}
-                    location={selectedLocation}
-                  />
-                  <DailyForecast weather={weather} />
-                </div>
-
-                <div className="min-h-0">
-                  <HourlyForecast weather={weather} />
-                </div>
+            <div className="grid lg:grid-cols-3 gap-8 h-fit">
+              <div className="lg:col-span-2 space-y-6">
+                <CurrentWeather weather={weather} location={selectedLocation} />
+                <DailyForecast weather={weather} />
               </div>
-            )
+
+              <div className="min-h-0">
+                <HourlyForecast weather={weather} />
+              </div>
+            </div>
           ) : (
             <WeatherCompareTable />
           )}
