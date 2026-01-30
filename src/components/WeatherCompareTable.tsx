@@ -51,6 +51,10 @@ export const WeatherCompareTable = () => {
 
   return (
     <div className="overflow-x-auto">
+      <h2 className="text-xl font-semibold mb-4">
+        Comparing {comparisons.length} locations
+      </h2>
+
       <Table>
         <TableHeader>
           <TableRow className="text-base font-semibold">
@@ -82,7 +86,7 @@ export const WeatherCompareTable = () => {
               <TableCell key={i}>
                 {Math.round(
                   weatherMap[`${loc.latitude},${loc.longitude}`]?.current
-                    ?.temperature_2m
+                    ?.temperature_2m,
                 )}
                 °
               </TableCell>

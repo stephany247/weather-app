@@ -18,8 +18,9 @@ import { useFavorites } from "@/store/useFavorites";
 import type { LocationData as FavoriteLocation } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useSelectedLocation } from "@/store/useSelectedLocation";
-import { BookmarkCheck, MapPinCheckInside } from "lucide-react";
+import { ArrowRightLeft, BookmarkCheck, MapPinCheckInside } from "lucide-react";
 import { useView } from "@/store/useView";
+import { useCompareStore } from "@/store/useCompare";
 
 export function FavoritesComboBox() {
   const [open, setOpen] = useState(false);
@@ -105,6 +106,7 @@ function FavoritesList({
 }) {
   const { resetView } = useView();
   const { removeFavorite } = useFavorites();
+  const { addComparison } = useCompareStore();
 
   return (
     <Command>
@@ -127,19 +129,31 @@ function FavoritesList({
               <span>
                 {fav.name}, {fav.country}
               </span>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFavorite(fav.id);
-                }}
-                className="text-foreground/70"
-                title="Remove favorite"
-              >
-                ✕
-              </Button>
+              <div className="flex items-center">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFavorite(fav.id);
+                  }}
+                  className="text-foreground/70"
+                  title="Remove favorite"
+                >
+                  ✕
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addComparison(fav);
+                  }}
+                  title="Add to compare"
+                >
+                  <ArrowRightLeft />
+                </Button>
+              </div>
             </CommandItem>
           ))}
         </CommandGroup>
