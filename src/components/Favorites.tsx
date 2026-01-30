@@ -104,6 +104,7 @@ function FavoritesList({
   setSelectedLocation: (fav: FavoriteLocation) => void;
 }) {
   const { resetView } = useView();
+  const { removeFavorite } = useFavorites();
 
   return (
     <Command>
@@ -121,8 +122,24 @@ function FavoritesList({
                 resetView();
                 setOpen(false);
               }}
+              className="flex items-center justify-between"
             >
-              {fav.name}, {fav.country}
+              <span>
+                {fav.name}, {fav.country}
+              </span>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeFavorite(fav.id);
+                }}
+                className="text-foreground/70"
+                title="Remove favorite"
+              >
+                ✕
+              </Button>
             </CommandItem>
           ))}
         </CommandGroup>
