@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "./ui/button";
-import { MapPin, Mic, Search } from "lucide-react";
+import { LocateFixed, Mic, Search } from "lucide-react";
 import { Input } from "./ui/input";
 import loadingIcon from "@/assets/images/icon-loading.svg";
 
@@ -86,7 +86,7 @@ export default function SearchForm({
         alert("No speech detected. Please try again and speak clearly.");
       } else if (event.error === "not-allowed") {
         alert(
-          "Microphone permission denied. Please enable it in your browser."
+          "Microphone permission denied. Please enable it in your browser.",
         );
       }
     };
@@ -117,9 +117,12 @@ export default function SearchForm({
         type="button"
         onClick={onDetectLocation}
         title="Get current location"
-        className="cursor-pointer inline-flex items-center gap-3 bg-accent/80 p-2 h-12 md:h-13 rounded-lg"
+        className="group relative cursor-pointer inline-flex items-center gap-3 bg-accent/80 hover:bg-primary/20 transition-all duration-200 ease-in-out p-2 h-12 md:h-13 rounded-lg"
       >
-        <MapPin
+        {!weather && (
+          <span className="absolute inset-0 rounded-lg animate-ping hover:animate-none bg-primary/30" />
+        )}
+        <LocateFixed
           size={30}
           className={`text-primary-foreground dark:text-primary shadow-2xl ${
             !weather ? "md:animate-bounce-slow" : ""
@@ -154,8 +157,8 @@ export default function SearchForm({
                 isSpeaking
                   ? "bg-red-500 text-white before:content-[''] before:absolute before:inset-0 before:rounded-full before:border-2 before:border-transparent before:border-t-white before:animate-spin"
                   : isListening
-                  ? "bg-red-500 text-white animate-pulse"
-                  : "text-muted-foreground hover:text-foreground"
+                    ? "bg-red-500 text-white animate-pulse"
+                    : "text-muted-foreground hover:text-foreground"
               }`}
             title="Voice Search"
           >
@@ -190,7 +193,7 @@ export default function SearchForm({
                           `${location.name}${
                             location.admin1 ? `, ${location.admin1}` : ""
                           }, ${location.country}`,
-                          query
+                          query,
                         )}
                       </p>
                     </Button>
@@ -205,7 +208,7 @@ export default function SearchForm({
       <Button
         type="submit"
         variant="default"
-        className="w-full md:w-2/10 h-14 text-xl text-foreground rounded-xl cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:bg-primary"
+        className="w-full md:w-2/10 h-14 text-xl rounded-xl cursor-pointer focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:bg-primary"
       >
         Search
       </Button>
@@ -226,6 +229,6 @@ function highlightMatch(text: string, query: string) {
       </mark>
     ) : (
       part
-    )
+    ),
   );
 }

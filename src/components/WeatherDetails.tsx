@@ -34,7 +34,7 @@ export const WeatherDetails = ({ weather }: WeatherDetailsProps) => {
 
       <Button
         onClick={() => setShowMore((prev) => !prev)}
-        className="mt-4 text-sm w-full col-span-2"
+        className="mt-2 w-full col-span-2 text-base"
       >
         {showMore ? "Hide details" : "Show more details"}
       </Button>
